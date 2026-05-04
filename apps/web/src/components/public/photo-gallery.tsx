@@ -25,7 +25,7 @@ export function PhotoGallery({ business }: PhotoGalleryProps) {
 
   return (
     <div className="mx-auto max-w-xl px-4 py-6">
-      <h2 className="mb-3 text-lg font-bold text-[#2B2D42]">Galería</h2>
+      <h2 className="mb-3 font-[family-name:var(--font-display)] text-lg font-semibold text-[#2A211E]">Galería</h2>
       <div className="grid grid-cols-3 gap-2 sm:grid-cols-4">
         {uniqueImages.slice(0, 8).map((url, idx) => (
           <button

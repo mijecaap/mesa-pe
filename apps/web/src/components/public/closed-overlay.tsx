@@ -41,7 +41,7 @@ export function ClosedOverlay({ openingHours, businessName }: ClosedOverlayProps
   if (dismissed) {
     // Banner sticky bottom cuando está dismissado
     return (
-      <div className="fixed inset-x-0 bottom-0 z-40 border-t border-[#E76F51]/20 bg-[#E76F51]/90 px-4 py-2 backdrop-blur-sm">
+      <div className="fixed inset-x-0 bottom-0 z-40 border-t border-[#C25E3A]/20 bg-[#C25E3A]/90 px-4 py-2 backdrop-blur-sm">
         <div className="mx-auto flex max-w-xl items-center gap-3">
           <Moon className="h-4 w-4 shrink-0 text-white" />
           <p className="text-xs font-medium text-white">
@@ -65,23 +65,23 @@ export function ClosedOverlay({ openingHours, businessName }: ClosedOverlayProps
         </Button>
 
         <div className="flex flex-col items-center text-center">
-          <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-[#E76F51]/10">
-            <Moon className="h-8 w-8 text-[#E76F51]" />
+          <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-[#C25E3A]/10">
+            <Moon className="h-8 w-8 text-[#C25E3A]" />
           </div>
 
-          <h2 className="text-xl font-bold text-[#2B2D42]">
+          <h2 className="font-[family-name:var(--font-display)] text-xl font-semibold text-[#2A211E]">
             {businessName ? `${businessName} está cerrado` : "Estamos cerrados"}
           </h2>
-          <p className="mt-1 text-sm text-[#8D817C]">
+          <p className="mt-1 text-sm text-[#7D6F65]">
             Agradecemos tu interés. Vuelve durante nuestro horario de atención.
           </p>
 
           {nextOpen && (
-            <div className="mt-4 rounded-lg bg-[#F5F0EB] px-4 py-3">
-              <p className="text-sm font-medium text-[#2B2D42]">
+            <div className="mt-4 rounded-lg bg-[#EDE6DE] px-4 py-3">
+              <p className="text-sm font-medium text-[#2A211E]">
                 Próxima apertura
               </p>
-              <p className="text-sm text-[#8D817C]">
+              <p className="text-sm text-[#7D6F65]">
                 {dayNames[nextOpen.dayOfWeek]} a las {nextOpen.openTime}
               </p>
             </div>
@@ -101,8 +101,8 @@ export function ClosedOverlay({ openingHours, businessName }: ClosedOverlayProps
                         key={h.dayOfWeek}
                         className="flex justify-between py-1"
                       >
-                        <span className="text-[#8D817C]">{dayNames[h.dayOfWeek]}</span>
-                        <span className="font-medium text-[#2B2D42]">
+                        <span className="text-[#7D6F65]">{dayNames[h.dayOfWeek]}</span>
+                        <span className="font-medium text-[#2A211E]">
                           {h.isClosed ? "Cerrado" : `${h.openTime} - ${h.closeTime}`}
                         </span>
                       </div>

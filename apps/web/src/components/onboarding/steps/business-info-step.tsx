@@ -6,14 +6,11 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { OnboardingShell } from "../onboarding-shell";
 import { useCreateBusiness } from "@/hooks/use-business";
-import { useOrganization } from "@clerk/nextjs";
-
 interface BusinessInfoStepProps {
   onNext: (businessId: string) => void;
 }
 
 export function BusinessInfoStep({ onNext }: BusinessInfoStepProps) {
-  const { organization } = useOrganization();
   const createBusiness = useCreateBusiness();
   const [form, setForm] = useState({
     slug: "",
@@ -26,10 +23,6 @@ export function BusinessInfoStep({ onNext }: BusinessInfoStepProps) {
   });
 
   const handleSubmit = async () => {
-    if (!organization) {
-      toast.error("Selecciona una organización");
-      return;
-    }
     if (!form.slug || !form.name || !form.whatsappNumber) {
       toast.error("Completa los campos obligatorios");
       return;

@@ -7,28 +7,35 @@ export interface OnboardingState {
 }
 
 const STORAGE_KEY = "mesa-onboarding";
-
-function getInitialState(): OnboardingState {
-  if (typeof window === "undefined") {
-    return { currentStep: 1, businessId: null, completedSteps: [] };
-  }
-  try {
-    const saved = localStorage.getItem(STORAGE_KEY);
-    if (saved) {
-      return JSON.parse(saved);
-    }
-  } catch {
-    // ignore
-  }
-  return { currentStep: 1, businessId: null, completedSteps: [] };
-}
+const DEFAULT_STATE: OnboardingState = {
+  currentStep: 1,
+  businessId: null,
+  completedSteps: [],
+};
 
 export function useOnboarding() {
-  const [state, setState] = useState<OnboardingState>(getInitialState);
+  // Inicializar SIEMPRE con el valor por defecto (consistente entre SSR y cliente)
+  // para evitar hydration mismatch. El valor real de localStorage se carga en useEffect.
+  const [state, setState] = useState<OnboardingState>(DEFAULT_STATE);
+  const [isHydrated, setIsHydrated] = useState(false);
 
   useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-  }, [state]);
+    setIsHydrated(true);
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved) {
+        setState(JSON.parse(saved));
+      }
+    } catch {
+      // ignore parse errors
+    }
+  }, []);
+
+  useEffect(() => {
+    if (isHydrated) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    }
+  }, [state, isHydrated]);
 
   const goToStep = useCallback((step: number) => {
     setState((prev) => ({
@@ -66,6 +73,7 @@ export function useOnboarding() {
 
   return {
     ...state,
+    isHydrated,
     goToStep,
     nextStep,
     prevStep,

@@ -10,6 +10,8 @@ const prisma = new PrismaClient({ adapter });
 
 const SEED_USER_ID = 'seed-user-001';
 const SEED_CLERK_ID = 'seed_clerk_id_001';
+const SEED_ORG_ID = 'seed-org-001';
+const SEED_CLERK_ORG_ID = process.env.SEED_CLERK_ORG_ID ?? 'seed_clerk_org_001';
 
 const businesses = [
   {
@@ -201,7 +203,7 @@ function randomDate(daysBack: number) {
 async function main() {
   console.log('🌱 Iniciando seed...');
 
-  // Crear usuario dummy si no existe
+  // 1. Crear o reutilizar usuario seed
   let user = await prisma.user.findUnique({ where: { clerkId: SEED_CLERK_ID } });
   if (!user) {
     user = await prisma.user.create({
@@ -215,6 +217,26 @@ async function main() {
     console.log('👤 Usuario seed creado');
   }
 
+  // 2. Crear o reutilizar organización seed
+  // Si SEED_CLERK_ORG_ID está configurado (tu org real de Clerk), la usamos.
+  // Si no, creamos una org dummy para que el modelo B2B funcione en desarrollo.
+  let org = await prisma.organization.findUnique({
+    where: { clerkOrgId: SEED_CLERK_ORG_ID },
+  });
+  if (!org) {
+    org = await prisma.organization.create({
+      data: {
+        id: SEED_ORG_ID,
+        clerkOrgId: SEED_CLERK_ORG_ID,
+        name: 'Seed Organization',
+        slug: 'seed-org',
+      },
+    });
+    console.log(`🏢 Organización seed creada (${SEED_CLERK_ORG_ID})`);
+  } else {
+    console.log(`🏢 Usando organización existente: ${org.clerkOrgId}`);
+  }
+
   for (const biz of businesses) {
     const existing = await prisma.business.findUnique({ where: { slug: biz.slug } });
     if (existing) {
@@ -225,6 +247,7 @@ async function main() {
     const business = await prisma.business.create({
       data: {
         ownerId: user.id,
+        organizationId: org.clerkOrgId,
         slug: biz.slug,
         name: biz.name,
         description: biz.description,

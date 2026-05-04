@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { FulfillmentType } from "../enums";
+import { FulfillmentType } from "../enums.js";
 
 export const cartModifierSchema = z.object({
   groupId: z.string(),

@@ -7,9 +7,11 @@ import type { CreateBusinessInput, UpdateBusinessInput } from "@mesa/shared-type
 export function useBusinesses(orgId?: string | null) {
   const { fetchWithAuth } = useApiClient();
   return useQuery({
-    queryKey: ["businesses", orgId],
-    queryFn: () => fetchWithAuth(`/businesses/org/${orgId}`),
-    enabled: !!orgId,
+    queryKey: ["businesses", orgId ?? "personal"],
+    queryFn: () =>
+      orgId
+        ? fetchWithAuth(`/businesses/org/${orgId}`)
+        : fetchWithAuth("/businesses/me"),
   });
 }
 

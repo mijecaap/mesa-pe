@@ -15,7 +15,7 @@ export function PromotionBanner({ promotions }: PromotionBannerProps) {
 
   return (
     <div className="mx-auto max-w-xl px-4 pt-4">
-      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-[#E85D04] to-[#F4A261] p-4 shadow-sm">
+      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-[#C25E3A] to-[#A3492D] p-4 shadow-sm">
         <div className="relative z-10 flex items-start gap-3">
           <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white/20">
             <Megaphone className="h-5 w-5 text-white" />

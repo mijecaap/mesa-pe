@@ -50,15 +50,34 @@ export function PublicPageClient({ business }: PublicPageClientProps) {
 
   return (
     <>
-      <HeroSection business={business} isOpenNow={business.isOpenNow} />
-      <PromotionBanner promotions={business.promotions} />
-      <ProductList 
-        business={business} 
-        onProductClick={handleProductClick}
-        isOpenNow={business.isOpenNow}
-      />
-      <PhotoGallery business={business} />
-      <BusinessInfo business={business} />
+      <main className="flex-1">
+        <HeroSection business={business} isOpenNow={business.isOpenNow} />
+        <PromotionBanner promotions={business.promotions} />
+        <ProductList
+          business={business}
+          onProductClick={handleProductClick}
+          isOpenNow={business.isOpenNow}
+        />
+        <PhotoGallery business={business} />
+        <BusinessInfo business={business} />
+      </main>
+
+      {business.plan === "FREE" && (
+        <footer className="border-t border-[#EDE6DE] bg-[#EDE6DE] py-4 text-center">
+          <p className="text-xs text-[#7D6F65]">
+            Carta digital creada con{" "}
+            <a
+              href="https://mesa.pe"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-medium text-[#C25E3A] hover:underline"
+            >
+              Mesa.pe
+            </a>
+          </p>
+        </footer>
+      )}
+
       <CartButton onClick={() => business.isOpenNow && setCartOpen(true)} disabled={!business.isOpenNow} />
       <CartSheet
         open={cartOpen}
@@ -86,24 +105,9 @@ export function PublicPageClient({ business }: PublicPageClientProps) {
         open={checkoutOpen}
         onOpenChange={setCheckoutOpen}
       />
-      {business.plan === "FREE" && (
-        <div className="border-t bg-[#FFF8F0] py-4 text-center">
-          <p className="text-xs text-[#8D817C]">
-            Carta digital creada con{" "}
-            <a
-              href="https://mesa.pe"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="font-medium text-[#f97316] hover:underline"
-            >
-              Mesa.pe
-            </a>
-          </p>
-        </div>
-      )}
       {!business.isOpenNow && (
-        <ClosedOverlay 
-          openingHours={business.openingHours} 
+        <ClosedOverlay
+          openingHours={business.openingHours}
           businessName={business.name}
         />
       )}

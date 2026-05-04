@@ -1,29 +1,73 @@
 "use client";
 
 import { useOrganization } from "@clerk/nextjs";
-import { Store, Eye, MessageSquare, ShoppingCart, ArrowRight } from "lucide-react";
+import { Store, Eye, MessageSquare, ShoppingCart, ArrowRight, AlertTriangle, Plus } from "lucide-react";
 import Link from "next/link";
 import { useBusinesses } from "@/hooks/use-business";
 import { useDashboardStore } from "@/stores/dashboard";
 import { useAnalyticsSummary } from "@/hooks/use-analytics";
 import { LaunchChecklist } from "@/components/dashboard/launch-checklist";
 import { DashboardStatsSkeleton } from "@/components/dashboard/skeletons/dashboard-stats-skeleton";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 
 export function DashboardClient() {
-  const { organization } = useOrganization();
-  const { data: businesses, isLoading } = useBusinesses(organization?.id);
+  const { organization, isLoaded: orgLoaded } = useOrganization();
+  const { data: businesses, isLoading, isPending, error } = useBusinesses(organization?.id);
   const { activeBusinessId } = useDashboardStore();
 
   const activeBusiness = businesses?.find(
     (b: { id: string }) => b.id === activeBusinessId,
   );
 
-  if (isLoading) {
+  // Clerk aún está cargando la organización
+  if (!orgLoaded) {
     return <DashboardStatsSkeleton />;
   }
 
+  // Query está cargando (incluye el estado enabled:false de react-query v5)
+  if (isLoading || isPending) {
+    return <DashboardStatsSkeleton />;
+  }
+
+  // Error de conexión o del servidor
+  if (error) {
+    return (
+      <Card className="border-red-200 bg-red-50/50">
+        <CardContent className="flex flex-col items-center gap-4 p-6 text-center">
+          <AlertTriangle className="h-8 w-8 text-red-600" />
+          <div className="space-y-1">
+            <p className="font-semibold text-red-800">No se pudo cargar la información</p>
+            <p className="text-sm text-red-700">
+              {error instanceof Error ? error.message : "Error de conexión con el servidor. Verifica que la API esté corriendo."}
+            </p>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  // Sin negocios creados
   if (!businesses || businesses.length === 0) {
-    return null;
+    return (
+      <Card>
+        <CardContent className="flex flex-col items-center gap-4 p-8 text-center">
+          <Store className="h-10 w-10 text-muted-foreground" />
+          <div className="space-y-1">
+            <p className="text-lg font-semibold">No tienes negocios aún</p>
+            <p className="text-sm text-muted-foreground">
+              Crea tu primer negocio para empezar a usar el dashboard.
+            </p>
+          </div>
+          <Link href="/dashboard/business">
+            <Button className="bg-[#E85D04] text-white hover:bg-[#D15104]">
+              <Plus className="mr-2 h-4 w-4" />
+              Crear negocio
+            </Button>
+          </Link>
+        </CardContent>
+      </Card>
+    );
   }
 
   return (

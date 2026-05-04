@@ -21,11 +21,14 @@ import {
   useCreateDeliveryZone,
   useDeleteDeliveryZone,
 } from "@/hooks/use-delivery-zones";
+import { useOrganization, OrganizationSwitcher } from "@clerk/nextjs";
+import { Users } from "lucide-react";
 
 export default function SettingsPage() {
   const { activeBusinessId } = useDashboardStore();
   const { data: business } = useBusiness(activeBusinessId ?? undefined);
   const updateBusiness = useUpdateBusiness();
+  const { organization } = useOrganization();
 
   const { data: paymentMethods } = usePaymentMethods(activeBusinessId ?? undefined);
   const createPaymentMethod = useCreatePaymentMethod();
@@ -128,10 +131,11 @@ export default function SettingsPage() {
       <h1 className="text-2xl font-bold">Configuración</h1>
 
       <Tabs defaultValue="general">
-        <TabsList className="grid w-full grid-cols-3">
+        <TabsList className="grid w-full grid-cols-4">
           <TabsTrigger value="general">General</TabsTrigger>
           <TabsTrigger value="payments">Pagos</TabsTrigger>
           <TabsTrigger value="zones">Delivery</TabsTrigger>
+          <TabsTrigger value="team">Equipo</TabsTrigger>
         </TabsList>
 
         <TabsContent value="general" className="space-y-4">
@@ -395,6 +399,53 @@ export default function SettingsPage() {
                   Agregar zona
                 </Button>
               </form>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="team" className="space-y-4">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Users className="h-5 w-5" />
+                Organización
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {organization ? (
+                <div className="space-y-4">
+                  <div>
+                    <p className="text-sm font-medium">Organización activa</p>
+                    <p className="text-sm text-muted-foreground">
+                      {organization.name}
+                    </p>
+                  </div>
+                  <div className="rounded-lg border bg-muted/30 p-4">
+                    <p className="text-sm text-muted-foreground mb-2">
+                      Cambiar o crear otra organización
+                    </p>
+                    <OrganizationSwitcher hidePersonal />
+                  </div>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  <div>
+                    <p className="text-sm font-medium">Negocio personal</p>
+                    <p className="text-sm text-muted-foreground">
+                      Actualmente estás gestionando tu negocio de forma
+                      individual. Si tienes un equipo o varios locales, crea
+                      una organización para invitar miembros y administrar
+                      múltiples negocios en equipo.
+                    </p>
+                  </div>
+                  <div className="rounded-lg border bg-muted/30 p-4">
+                    <p className="text-sm text-muted-foreground mb-2">
+                      Crear organización
+                    </p>
+                    <OrganizationSwitcher hidePersonal />
+                  </div>
+                </div>
+              )}
             </CardContent>
           </Card>
         </TabsContent>

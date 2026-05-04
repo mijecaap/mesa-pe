@@ -206,7 +206,7 @@ export function CheckoutModal({ business, open, onOpenChange }: CheckoutModalPro
           <form onSubmit={handleSubmit(onSubmit)} className="mt-4 space-y-4">
             {/* Modalidad */}
             <div>
-              <Label className="mb-2 block text-sm font-medium text-[#2B2D42]">
+              <Label className="mb-2 block text-sm font-medium text-[#2A211E]">
                 ¿Cómo deseas recibir tu pedido?
               </Label>
               <RadioGroup
@@ -225,12 +225,12 @@ export function CheckoutModal({ business, open, onOpenChange }: CheckoutModalPro
                     key={opt.value}
                     className={`flex cursor-pointer flex-col items-center gap-1 rounded-xl border p-3 text-center transition-colors ${
                       fulfillmentType === opt.value
-                        ? "border-[#E85D04] bg-[#E85D04]/5"
-                        : "border-[#EBE5E0] hover:border-[#E85D04]/30"
+                        ? "border-[#C25E3A] bg-[#C25E3A]/5"
+                        : "border-[#EDE6DE] hover:border-[#C25E3A]/30"
                     }`}
                   >
                     <RadioGroupItem value={opt.value} className="sr-only" />
-                    <span className="text-sm font-medium text-[#2B2D42]">
+                    <span className="text-sm font-medium text-[#2A211E]">
                       {opt.label}
                     </span>
                   </label>
@@ -241,7 +241,7 @@ export function CheckoutModal({ business, open, onOpenChange }: CheckoutModalPro
             {/* Número de mesa */}
             {fulfillmentType === FulfillmentType.DINE_IN && (
               <div>
-                <Label htmlFor="tableNumber" className="text-[#2B2D42]">
+                <Label htmlFor="tableNumber" className="text-[#2A211E]">
                   Número de mesa
                 </Label>
                 <Input
@@ -262,7 +262,7 @@ export function CheckoutModal({ business, open, onOpenChange }: CheckoutModalPro
             {fulfillmentType === FulfillmentType.DELIVERY && (
               <>
                 <div>
-                  <Label htmlFor="address" className="text-[#2B2D42]">
+                  <Label htmlFor="address" className="text-[#2A211E]">
                     Dirección de entrega
                   </Label>
                   <Textarea
@@ -280,7 +280,7 @@ export function CheckoutModal({ business, open, onOpenChange }: CheckoutModalPro
 
                 {business.zones.length > 0 && (
                   <div>
-                    <Label className="mb-2 block text-[#2B2D42]">
+                    <Label className="mb-2 block text-[#2A211E]">
                       Zona de delivery
                     </Label>
                     <RadioGroup
@@ -293,15 +293,15 @@ export function CheckoutModal({ business, open, onOpenChange }: CheckoutModalPro
                           key={zone.id}
                           className={`flex cursor-pointer items-center gap-3 rounded-xl border p-3 transition-colors ${
                             deliveryZoneId === zone.id
-                              ? "border-[#E85D04] bg-[#E85D04]/5"
-                              : "border-[#EBE5E0] hover:border-[#E85D04]/30"
+                              ? "border-[#C25E3A] bg-[#C25E3A]/5"
+                              : "border-[#EDE6DE] hover:border-[#C25E3A]/30"
                           }`}
                         >
                           <RadioGroupItem value={zone.id} />
-                          <span className="flex-1 text-sm text-[#2B2D42]">
+                          <span className="flex-1 text-sm text-[#2A211E]">
                             {zone.name}
                           </span>
-                          <span className="text-xs text-[#8D817C]">
+                          <span className="text-xs text-[#7D6F65]">
                             {formatPrice(parseFloat(zone.deliveryFee))}
                           </span>
                         </label>
@@ -314,7 +314,7 @@ export function CheckoutModal({ business, open, onOpenChange }: CheckoutModalPro
 
             {/* Datos personales */}
             <div>
-              <Label htmlFor="customerName" className="text-[#2B2D42]">
+              <Label htmlFor="customerName" className="text-[#2A211E]">
                 Tu nombre *
               </Label>
               <Input
@@ -331,7 +331,7 @@ export function CheckoutModal({ business, open, onOpenChange }: CheckoutModalPro
             </div>
 
             <div>
-              <Label htmlFor="customerPhone" className="text-[#2B2D42]">
+              <Label htmlFor="customerPhone" className="text-[#2A211E]">
                 Teléfono
               </Label>
               <Input
@@ -345,7 +345,7 @@ export function CheckoutModal({ business, open, onOpenChange }: CheckoutModalPro
             {/* Método de pago */}
             {business.paymentMethods.length > 0 && (
               <div>
-                <Label className="mb-2 block text-[#2B2D42]">
+                <Label className="mb-2 block text-[#2A211E]">
                   Método de pago preferido
                 </Label>
                 <RadioGroup
@@ -357,10 +357,10 @@ export function CheckoutModal({ business, open, onOpenChange }: CheckoutModalPro
                   {business.paymentMethods.map((pm) => (
                     <label
                       key={pm.id}
-                      className="flex cursor-pointer items-center gap-3 rounded-xl border border-[#EBE5E0] p-3 transition-colors hover:border-[#E85D04]/30"
+                      className="flex cursor-pointer items-center gap-3 rounded-xl border border-[#EDE6DE] p-3 transition-colors hover:border-[#C25E3A]/30"
                     >
                       <RadioGroupItem value={pm.name} />
-                      <span className="text-sm text-[#2B2D42]">
+                      <span className="text-sm text-[#2A211E]">
                         {pm.name}
                       </span>
                     </label>
@@ -371,7 +371,7 @@ export function CheckoutModal({ business, open, onOpenChange }: CheckoutModalPro
 
             {/* Nota */}
             <div>
-              <Label htmlFor="note" className="text-[#2B2D42]">
+              <Label htmlFor="note" className="text-[#2A211E]">
                 Nota adicional
               </Label>
               <Textarea
@@ -383,8 +383,8 @@ export function CheckoutModal({ business, open, onOpenChange }: CheckoutModalPro
             </div>
 
             {/* Resumen */}
-            <div className="rounded-xl border border-[#EBE5E0] bg-[#F5F0EB]/50 p-4">
-              <h4 className="mb-3 text-sm font-semibold text-[#2B2D42]">
+            <div className="rounded-xl border border-[#EDE6DE] bg-[#FDF8F3] p-4">
+              <h4 className="mb-3 text-sm font-semibold text-[#2A211E]">
                 Resumen
               </h4>
               <div className="space-y-2">
@@ -398,32 +398,32 @@ export function CheckoutModal({ business, open, onOpenChange }: CheckoutModalPro
                   const unitPrice = item.basePrice + modifiersTotal;
                   return (
                     <div key={item.id} className="flex justify-between text-sm">
-                      <span className="text-[#2B2D42]">
+                      <span className="text-[#2A211E]">
                         {item.name} x{item.quantity}
                       </span>
-                      <span className="text-[#8D817C]">
+                      <span className="text-[#7D6F65]">
                         {formatPrice(unitPrice * item.quantity)}
                       </span>
                     </div>
                   );
                 })}
               </div>
-              <div className="mt-3 border-t border-[#EBE5E0] pt-2">
+              <div className="mt-3 border-t border-[#EDE6DE] pt-2">
                 <div className="flex justify-between text-sm">
-                  <span className="text-[#8D817C]">Subtotal</span>
-                  <span className="text-[#2B2D42]">{formatPrice(subtotal)}</span>
+                  <span className="text-[#7D6F65]">Subtotal</span>
+                  <span className="text-[#2A211E]">{formatPrice(subtotal)}</span>
                 </div>
                 {deliveryFee > 0 && (
                   <div className="flex justify-between text-sm">
-                    <span className="text-[#8D817C]">Delivery</span>
-                    <span className="text-[#2B2D42]">
+                    <span className="text-[#7D6F65]">Delivery</span>
+                    <span className="text-[#2A211E]">
                       {formatPrice(deliveryFee)}
                     </span>
                   </div>
                 )}
                 <div className="mt-1 flex justify-between text-base font-bold">
-                  <span className="text-[#2B2D42]">Total</span>
-                  <span className="text-[#E85D04]">{formatPrice(total)}</span>
+                  <span className="text-[#2A211E]">Total</span>
+                  <span className="text-[#C25E3A]">{formatPrice(total)}</span>
                 </div>
               </div>
             </div>

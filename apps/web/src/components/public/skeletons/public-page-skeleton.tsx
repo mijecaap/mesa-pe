@@ -2,7 +2,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 export function PublicPageSkeleton() {
   return (
-    <div className="min-h-screen bg-[#FFFCF8]">
+    <div className="min-h-screen bg-[#FDF8F3]">
       {/* Hero skeleton */}
       <div className="relative">
         <Skeleton className="h-40 w-full sm:h-56" />
@@ -32,7 +32,7 @@ export function PublicPageSkeleton() {
               {Array.from({ length: 2 }).map((_, j) => (
                 <div
                   key={j}
-                  className="flex gap-3 rounded-2xl border border-[#EBE5E0] bg-white p-3"
+                  className="flex gap-3 rounded-2xl border border-[#EDE6DE] bg-white p-3"
                 >
                   <Skeleton className="h-24 w-24 shrink-0 rounded-xl sm:h-28 sm:w-28" />
                   <div className="flex flex-1 flex-col justify-between py-0.5">

@@ -13,10 +13,10 @@ export function PublicPageWrapper({
 
   if (!business) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-[#FFFCF8]">
+      <div className="flex min-h-screen items-center justify-center bg-[#FDF8F3]">
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-[#2B2D42]">Negocio no encontrado</h1>
-          <p className="mt-2 text-[#8D817C]">La carta digital que buscas no existe.</p>
+          <h1 className="font-[family-name:var(--font-display)] text-2xl font-semibold text-[#2A211E]">Negocio no encontrado</h1>
+          <p className="mt-2 text-[#7D6F65]">La carta digital que buscas no existe.</p>
         </div>
       </div>
     );

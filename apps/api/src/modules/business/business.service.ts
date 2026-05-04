@@ -3,6 +3,7 @@ import {
   ConflictException,
   NotFoundException,
 } from '@nestjs/common';
+import { createClerkClient } from '@clerk/backend';
 import { PrismaService } from '../../database/prisma.service';
 import {
   CreateBusinessDto,
@@ -53,6 +54,47 @@ export class BusinessService {
     private readonly featureFlags: FeatureFlagsService,
   ) {}
 
+  private async ensureUser(clerkId: string) {
+    let user = await this.prisma.user.findUnique({
+      where: { clerkId },
+    });
+    if (user) {
+      return user;
+    }
+
+    const clerk = createClerkClient({
+      secretKey: process.env.CLERK_SECRET_KEY,
+    });
+    const clerkUser = await clerk.users.getUser(clerkId);
+    const email = clerkUser.emailAddresses[0]?.emailAddress;
+    const name =
+      `${clerkUser.firstName ?? ''} ${clerkUser.lastName ?? ''}`.trim() ||
+      email;
+
+    // El usuario pudo haber sido recreado en Clerk (mismo email, nuevo clerkId)
+    const existingByEmail = email
+      ? await this.prisma.user.findUnique({ where: { email } })
+      : null;
+
+    if (existingByEmail) {
+      user = await this.prisma.user.update({
+        where: { id: existingByEmail.id },
+        data: { clerkId, name, imageUrl: clerkUser.imageUrl },
+      });
+    } else {
+      user = await this.prisma.user.create({
+        data: {
+          clerkId,
+          email: email ?? `unknown-${clerkId}@mesa.pe`,
+          name,
+          imageUrl: clerkUser.imageUrl,
+        },
+      });
+    }
+
+    return user;
+  }
+
   async create(
     userId: string,
     orgId: string | undefined,
@@ -65,12 +107,7 @@ export class BusinessService {
       throw new ConflictException('El slug ya está en uso');
     }
 
-    const user = await this.prisma.user.findUnique({
-      where: { clerkId: userId },
-    });
-    if (!user) {
-      throw new NotFoundException('Usuario no encontrado');
-    }
+    const user = await this.ensureUser(userId);
 
     return this.prisma.business.create({
       data: {
@@ -221,6 +258,20 @@ export class BusinessService {
   async findByOrganization(orgId: string) {
     return this.prisma.business.findMany({
       where: { organizationId: orgId },
+      orderBy: { createdAt: 'desc' },
+    });
+  }
+
+  async findByOwner(clerkId: string) {
+    const user = await this.prisma.user.findUnique({
+      where: { clerkId },
+      select: { id: true },
+    });
+    if (!user) {
+      return [];
+    }
+    return this.prisma.business.findMany({
+      where: { ownerId: user.id, organizationId: null },
       orderBy: { createdAt: 'desc' },
     });
   }

@@ -40,14 +40,9 @@ export class BusinessController {
     return this.businessService.findByOrganization(orgId);
   }
 
-  @Get('public/:slug')
-  findPublicBySlug(@Param('slug') slug: string) {
-    return this.businessService.findPublicBySlug(slug);
-  }
-
-  @Get('public-slugs')
-  findPublicSlugs() {
-    return this.businessService.findPublicSlugs();
+  @Get('me')
+  findByOwner(@CurrentUser() user: { userId: string }) {
+    return this.businessService.findByOwner(user.userId);
   }
 
   @Get(':id')

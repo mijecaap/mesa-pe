@@ -16,7 +16,7 @@ export function ProductListSkeleton() {
             {Array.from({ length: 3 }).map((_, j) => (
               <div
                 key={j}
-                className="flex gap-3 rounded-2xl border border-[#EBE5E0] bg-white p-3"
+                className="flex gap-3 rounded-2xl border border-[#EDE6DE] bg-white p-3"
               >
                 <Skeleton className="h-24 w-24 shrink-0 rounded-xl sm:h-28 sm:w-28" />
                 <div className="flex flex-1 flex-col justify-between py-0.5">

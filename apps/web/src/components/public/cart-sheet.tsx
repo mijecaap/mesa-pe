@@ -45,7 +45,7 @@ export function CartSheet({ open, onOpenChange, currency, onCheckout }: CartShee
 
         <div className="flex-1 overflow-y-auto px-4 py-2">
           {items.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-12 text-[#8D817C]">
+            <div className="flex flex-col items-center justify-center py-12 text-[#7D6F65]">
               <ShoppingBag className="mb-3 size-12 opacity-30" />
               <p className="text-sm">Tu carrito está vacío</p>
             </div>
@@ -64,7 +64,7 @@ export function CartSheet({ open, onOpenChange, currency, onCheckout }: CartShee
                 return (
                   <div
                     key={item.id}
-                    className="flex gap-3 rounded-xl border border-[#EBE5E0] bg-white p-3"
+                    className="flex gap-3 rounded-xl border border-[#EDE6DE] bg-white p-3"
                   >
                     {item.imageUrl ? (
                       <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-lg">
@@ -77,8 +77,8 @@ export function CartSheet({ open, onOpenChange, currency, onCheckout }: CartShee
                         />
                       </div>
                     ) : (
-                      <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-lg bg-[#F5F0EB]">
-                        <span className="text-lg font-bold text-[#EBE5E0]">
+                      <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-lg bg-[#EDE6DE]">
+                        <span className="text-lg font-semibold text-[#C25E3A]/30">
                           {item.name.charAt(0).toUpperCase()}
                         </span>
                       </div>
@@ -86,11 +86,11 @@ export function CartSheet({ open, onOpenChange, currency, onCheckout }: CartShee
 
                     <div className="flex min-w-0 flex-1 flex-col justify-between">
                       <div>
-                        <h4 className="truncate text-sm font-semibold text-[#2B2D42]">
+                        <h4 className="truncate text-sm font-semibold text-[#2A211E]">
                           {item.name}
                         </h4>
                         {item.modifiers.length > 0 && (
-                          <p className="mt-0.5 line-clamp-1 text-[10px] text-[#8D817C]">
+                          <p className="mt-0.5 line-clamp-1 text-[10px] text-[#7D6F65]">
                             {item.modifiers
                               .map(
                                 (m) =>
@@ -109,30 +109,30 @@ export function CartSheet({ open, onOpenChange, currency, onCheckout }: CartShee
                             onClick={() =>
                               updateQuantity(item.id, item.quantity - 1)
                             }
-                            className="flex h-6 w-6 items-center justify-center rounded-md border border-[#EBE5E0] text-[#2B2D42] transition-colors hover:bg-[#F5F0EB]"
+                            className="flex h-6 w-6 items-center justify-center rounded-md border border-[#EDE6DE] text-[#2A211E] transition-colors hover:bg-[#EDE6DE]"
                           >
                             <Minus className="size-3" />
                           </button>
-                          <span className="min-w-[1.5rem] text-center text-sm font-medium text-[#2B2D42]">
+                          <span className="min-w-[1.5rem] text-center text-sm font-medium text-[#2A211E]">
                             {item.quantity}
                           </span>
                           <button
                             onClick={() =>
                               updateQuantity(item.id, item.quantity + 1)
                             }
-                            className="flex h-6 w-6 items-center justify-center rounded-md border border-[#EBE5E0] text-[#2B2D42] transition-colors hover:bg-[#F5F0EB]"
+                            className="flex h-6 w-6 items-center justify-center rounded-md border border-[#EDE6DE] text-[#2A211E] transition-colors hover:bg-[#EDE6DE]"
                           >
                             <Plus className="size-3" />
                           </button>
                         </div>
 
                         <div className="flex items-center gap-3">
-                          <span className="text-sm font-bold text-[#E85D04]">
+                          <span className="text-sm font-bold text-[#C25E3A]">
                             {formatPrice(totalPrice)}
                           </span>
                           <button
                             onClick={() => removeItem(item.id)}
-                            className="text-[#8D817C] transition-colors hover:text-red-500"
+                            className="text-[#7D6F65] transition-colors hover:text-red-500"
                           >
                             <Trash2 className="size-4" />
                           </button>
@@ -150,13 +150,13 @@ export function CartSheet({ open, onOpenChange, currency, onCheckout }: CartShee
           <SheetFooter className="border-t bg-white">
             <div className="w-full">
               <div className="mb-3 flex items-center justify-between text-sm">
-                <span className="text-[#8D817C]">Subtotal</span>
-                <span className="font-semibold text-[#2B2D42]">
+                <span className="text-[#7D6F65]">Subtotal</span>
+                <span className="font-semibold text-[#2A211E]">
                   {formatPrice(subtotal)}
                 </span>
               </div>
               <Button
-                className="w-full bg-[#E85D04] text-white hover:bg-[#D15104]"
+                className="w-full bg-[#C25E3A] text-white hover:bg-[#A3492D]"
                 onClick={() => {
                   onOpenChange(false);
                   onCheckout();

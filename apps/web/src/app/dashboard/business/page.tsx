@@ -71,7 +71,6 @@ export default function BusinessPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!organization) return;
 
     try {
       if (isCreating) {

@@ -20,11 +20,11 @@ const tagIcons: Record<string, React.ReactNode> = {
 };
 
 const tagStyles: Record<string, string> = {
-  nuevo: "bg-[#E9C46A] text-[#2B2D42]",
-  popular: "bg-[#E85D04] text-white",
-  promo: "bg-[#F4A261] text-[#2B2D42]",
-  vegetariano: "bg-[#2A9D8F] text-white",
-  picante: "bg-[#E76F51] text-white",
+  nuevo: "bg-[#EDE6DE] text-[#2A211E]",
+  popular: "bg-[#C25E3A] text-white",
+  promo: "bg-[#4A6B5D] text-white",
+  vegetariano: "bg-[#4A6B5D]/10 text-[#4A6B5D]",
+  picante: "bg-[#C25E3A]/10 text-[#C25E3A]",
 };
 
 export function ProductCard({ item, currency, onClick, isOpenNow = true }: ProductCardProps) {
@@ -44,7 +44,7 @@ export function ProductCard({ item, currency, onClick, isOpenNow = true }: Produ
       type="button"
       onClick={isDisabled ? undefined : onClick}
       disabled={isDisabled}
-      className={`group flex w-full gap-3 rounded-2xl border border-[#EBE5E0] bg-white p-3 text-left transition-all duration-200 hover:shadow-md ${
+      className={`group flex w-full gap-3 rounded-2xl border border-[#EDE6DE] bg-white p-3 text-left transition-all duration-200 hover:shadow-[0_10px_15px_-3px_rgba(42,33,30,0.08),0_4px_6px_-4px_rgba(42,33,30,0.04)] ${
         isDisabled ? "cursor-not-allowed opacity-50" : "cursor-pointer hover:-translate-y-0.5"
       }`}
     >
@@ -59,15 +59,15 @@ export function ProductCard({ item, currency, onClick, isOpenNow = true }: Produ
           />
           {!item.isAvailable && (
             <div className="absolute inset-0 flex items-center justify-center bg-black/40">
-              <span className="rounded-full bg-white/90 px-2 py-0.5 text-xs font-semibold text-[#2B2D42]">
+              <span className="rounded-full bg-white/90 px-2 py-0.5 text-xs font-semibold text-[#2A211E]">
                 Agotado
               </span>
             </div>
           )}
         </div>
       ) : (
-        <div className="flex h-24 w-24 shrink-0 items-center justify-center rounded-xl bg-[#F5F0EB] sm:h-28 sm:w-28">
-          <span className="text-2xl font-bold text-[#EBE5E0]">
+        <div className="flex h-24 w-24 shrink-0 items-center justify-center rounded-xl bg-[#EDE6DE] sm:h-28 sm:w-28">
+          <span className="text-2xl font-semibold text-[#C25E3A]/30">
             {item.name.charAt(0).toUpperCase()}
           </span>
         </div>
@@ -75,9 +75,9 @@ export function ProductCard({ item, currency, onClick, isOpenNow = true }: Produ
 
       <div className="flex min-w-0 flex-1 flex-col justify-between py-0.5">
         <div>
-          <h3 className="font-semibold text-[#2B2D42]">{item.name}</h3>
+          <h3 className="font-semibold text-[#2A211E]">{item.name}</h3>
           {item.description && (
-            <p className="mt-0.5 line-clamp-2 text-xs text-[#8D817C]">
+            <p className="mt-0.5 line-clamp-2 text-xs text-[#7D6F65]">
               {item.description}
             </p>
           )}
@@ -87,7 +87,7 @@ export function ProductCard({ item, currency, onClick, isOpenNow = true }: Produ
                 <span
                   key={tag}
                   className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide ${
-                    tagStyles[tag] || "bg-[#F5F0EB] text-[#8D817C]"
+                    tagStyles[tag] || "bg-[#EDE6DE] text-[#7D6F65]"
                   }`}
                 >
                   {tagIcons[tag]}
@@ -97,7 +97,7 @@ export function ProductCard({ item, currency, onClick, isOpenNow = true }: Produ
             </div>
           )}
         </div>
-        <p className="mt-2 text-sm font-bold text-[#E85D04]">
+        <p className="mt-2 text-sm font-bold text-[#C25E3A]">
           {formatPrice(item.basePrice)}
         </p>
       </div>

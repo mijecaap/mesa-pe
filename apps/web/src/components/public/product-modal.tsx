@@ -171,7 +171,7 @@ export function ProductModal({
             {item.description ? (
               <DialogDescription>{item.description}</DialogDescription>
             ) : null}
-            <p className="text-base font-bold text-[#E85D04]">
+            <p className="text-base font-bold text-[#C25E3A]">
               {formatPrice(totalPrice)}
             </p>
           </DialogHeader>
@@ -180,11 +180,11 @@ export function ProductModal({
             {item.modifiers.map((mod) => (
               <div key={mod.id}>
                 <div className="mb-2 flex items-center gap-2">
-                  <h4 className="text-sm font-semibold text-[#2B2D42]">
+                  <h4 className="text-sm font-semibold text-[#2A211E]">
                     {mod.name}
                   </h4>
                   {mod.isRequired && (
-                    <span className="text-[10px] font-medium text-[#E85D04]">
+                    <span className="text-[10px] font-medium text-[#C25E3A]">
                       Obligatorio
                     </span>
                   )}
@@ -204,18 +204,18 @@ export function ProductModal({
                         className={`flex items-center gap-3 rounded-xl border p-3 transition-colors ${
                           !opt.isAvailable
                             ? "cursor-not-allowed opacity-50"
-                            : "cursor-pointer border-[#EBE5E0] hover:border-[#E85D04]/30"
+                            : "cursor-pointer border-[#EDE6DE] hover:border-[#C25E3A]/30"
                         }`}
                       >
                         <RadioGroupItem
                           value={opt.id}
                           disabled={!opt.isAvailable}
                         />
-                        <span className="flex-1 text-sm text-[#2B2D42]">
+                        <span className="flex-1 text-sm text-[#2A211E]">
                           {opt.name}
                         </span>
                         {parseFloat(opt.priceDelta) > 0 && (
-                          <span className="text-xs text-[#8D817C]">
+                          <span className="text-xs text-[#7D6F65]">
                             +{formatPrice(parseFloat(opt.priceDelta))}
                           </span>
                         )}
@@ -230,7 +230,7 @@ export function ProductModal({
                         className={`flex items-center gap-3 rounded-xl border p-3 transition-colors ${
                           !opt.isAvailable
                             ? "cursor-not-allowed opacity-50"
-                            : "cursor-pointer border-[#EBE5E0] hover:border-[#E85D04]/30"
+                            : "cursor-pointer border-[#EDE6DE] hover:border-[#C25E3A]/30"
                         }`}
                       >
                         <Checkbox
@@ -246,11 +246,11 @@ export function ProductModal({
                           }
                           disabled={!opt.isAvailable}
                         />
-                        <span className="flex-1 text-sm text-[#2B2D42]">
+                        <span className="flex-1 text-sm text-[#2A211E]">
                           {opt.name}
                         </span>
                         {parseFloat(opt.priceDelta) > 0 && (
-                          <span className="text-xs text-[#8D817C]">
+                          <span className="text-xs text-[#7D6F65]">
                             +{formatPrice(parseFloat(opt.priceDelta))}
                           </span>
                         )}
@@ -263,7 +263,7 @@ export function ProductModal({
           </div>
 
           <Button
-            className="mt-6 w-full bg-[#E85D04] text-white hover:bg-[#D15104]"
+            className="mt-6 w-full bg-[#C25E3A] text-white hover:bg-[#A3492D]"
             disabled={!allRequiredSelected || !isOpenNow}
             onClick={handleAddToCart}
           >

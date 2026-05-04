@@ -27,22 +27,22 @@ export function BusinessInfo({ business }: BusinessInfoProps) {
 
   return (
     <div className="mx-auto max-w-xl px-4 py-6">
-      <div className="space-y-4 rounded-2xl border border-[#EBE5E0] bg-white p-4">
-        <h2 className="text-sm font-semibold uppercase tracking-wider text-[#8D817C]">
+      <div className="space-y-4 rounded-2xl border border-[#EDE6DE] bg-white p-5">
+        <h2 className="text-xs font-semibold uppercase tracking-[0.15em] text-[#7D6F65]">
           Información
         </h2>
 
         {business.address && (
           <div className="flex items-start gap-3">
-            <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-[#E85D04]" />
+            <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-[#C25E3A]" />
             <div className="flex-1">
-              <p className="text-sm text-[#2B2D42]">{business.address}</p>
+              <p className="text-sm text-[#2A211E]">{business.address}</p>
               {business.googleMapsUrl && (
                 <a
                   href={business.googleMapsUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="mt-1 inline-block text-xs font-medium text-[#E85D04] hover:underline"
+                  className="mt-1 inline-block text-xs font-medium text-[#C25E3A] hover:underline"
                 >
                   Ver en Google Maps →
                 </a>
@@ -51,55 +51,62 @@ export function BusinessInfo({ business }: BusinessInfoProps) {
           </div>
         )}
 
-        <button
-          onClick={() => setShowHours(!showHours)}
-          className="flex w-full items-center justify-between gap-3"
-        >
-          <div className="flex items-center gap-3">
-            <Clock className="h-4 w-4 shrink-0 text-[#E85D04]" />
-            <span className="text-sm text-[#2B2D42]">Horarios de atención</span>
-          </div>
-          {showHours ? (
-            <ChevronUp className="h-4 w-4 text-[#8D817C]" />
-          ) : (
-            <ChevronDown className="h-4 w-4 text-[#8D817C]" />
-          )}
-        </button>
+        <div className="border-t border-[#EDE6DE] pt-4">
+          <button
+            onClick={() => setShowHours(!showHours)}
+            className="flex w-full items-center justify-between gap-3"
+          >
+            <div className="flex items-center gap-3">
+              <Clock className="h-4 w-4 shrink-0 text-[#C25E3A]" />
+              <span className="text-sm text-[#2A211E]">Horarios de atención</span>
+            </div>
+            {showHours ? (
+              <ChevronUp className="h-4 w-4 text-[#7D6F65] transition-transform" />
+            ) : (
+              <ChevronDown className="h-4 w-4 text-[#7D6F65] transition-transform" />
+            )}
+          </button>
 
-        {showHours && (
-          <div className="space-y-1.5 pl-7">
-            {sortedHours.map((h) => (
-              <div
-                key={h.id}
-                className="flex justify-between text-sm"
-              >
-                <span className="text-[#8D817C]">{dayNames[h.dayOfWeek]}</span>
-                <span className="font-medium text-[#2B2D42]">
-                  {h.isClosed ? (
-                    <span className="text-[#E76F51]">Cerrado</span>
-                  ) : (
-                    `${h.openTime} – ${h.closeTime}`
-                  )}
-                </span>
+          <div
+            className={`grid transition-all duration-300 ease-out ${
+              showHours ? "mt-3 grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
+            }`}
+          >
+            <div className="overflow-hidden">
+              <div className="space-y-1.5 pl-7">
+                {sortedHours.map((h) => (
+                  <div key={h.id} className="flex justify-between text-sm">
+                    <span className="text-[#7D6F65]">{dayNames[h.dayOfWeek]}</span>
+                    <span className="font-medium text-[#2A211E]">
+                      {h.isClosed ? (
+                        <span className="text-[#C25E3A]">Cerrado</span>
+                      ) : (
+                        `${h.openTime} – ${h.closeTime}`
+                      )}
+                    </span>
+                  </div>
+                ))}
               </div>
-            ))}
+            </div>
           </div>
-        )}
+        </div>
 
         {business.paymentMethods.length > 0 && (
-          <div className="flex items-start gap-3">
-            <CreditCard className="mt-0.5 h-4 w-4 shrink-0 text-[#E85D04]" />
-            <div className="flex-1">
-              <p className="text-sm text-[#2B2D42]">Métodos de pago</p>
-              <div className="mt-1.5 flex flex-wrap gap-1.5">
-                {business.paymentMethods.map((pm) => (
-                  <span
-                    key={pm.id}
-                    className="inline-flex items-center rounded-lg bg-[#F5F0EB] px-2.5 py-1 text-xs font-medium text-[#2B2D42]"
-                  >
-                    {pm.name}
-                  </span>
-                ))}
+          <div className="border-t border-[#EDE6DE] pt-4">
+            <div className="flex items-start gap-3">
+              <CreditCard className="mt-0.5 h-4 w-4 shrink-0 text-[#C25E3A]" />
+              <div className="flex-1">
+                <p className="text-sm text-[#2A211E]">Métodos de pago</p>
+                <div className="mt-1.5 flex flex-wrap gap-1.5">
+                  {business.paymentMethods.map((pm) => (
+                    <span
+                      key={pm.id}
+                      className="inline-flex items-center rounded-lg bg-[#EDE6DE] px-2.5 py-1 text-xs font-medium text-[#2A211E]"
+                    >
+                      {pm.name}
+                    </span>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
