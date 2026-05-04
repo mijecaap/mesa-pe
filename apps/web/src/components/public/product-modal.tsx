@@ -2,17 +2,8 @@
 
 import { useState, useMemo, useCallback } from "react";
 import Image from "next/image";
+import { X, Plus, Minus, Check } from "lucide-react";
 import { toast } from "sonner";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-} from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Checkbox } from "@/components/ui/checkbox";
 import { useCartStore } from "@/stores/cart-store";
 import { trackEvent } from "@/lib/analytics";
 import type { PublicBusiness } from "@/hooks/use-public-business";
@@ -37,6 +28,7 @@ export function ProductModal({
   const [selectedModifiers, setSelectedModifiers] = useState<
     Record<string, string[]>
   >({});
+  const [quantity, setQuantity] = useState(1);
 
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat("es-PE", {
@@ -56,8 +48,8 @@ export function ProductModal({
         if (opt) price += parseFloat(opt.priceDelta);
       });
     });
-    return price;
-  }, [item, selectedModifiers]);
+    return price * quantity;
+  }, [item, selectedModifiers, quantity]);
 
   const allRequiredSelected = useMemo(() => {
     if (!item) return false;
@@ -74,6 +66,7 @@ export function ProductModal({
       onOpenChange(isOpen);
       if (!isOpen) {
         setSelectedModifiers({});
+        setQuantity(1);
       } else if (item) {
         trackEvent("product_view", {
           product_id: item.id,
@@ -127,150 +120,207 @@ export function ProductModal({
       })
       .filter(Boolean) as CartModifier[];
 
-    const cartItem: CartItem = {
-      id: `${item.id}-${Date.now()}`,
-      menuItemId: item.id,
-      name: item.name,
-      basePrice: parseFloat(item.basePrice),
-      quantity: 1,
-      modifiers,
-      imageUrl: item.imageUrl,
-    };
+    // Add multiple times if quantity > 1
+    for (let i = 0; i < quantity; i++) {
+      const cartItem: CartItem = {
+        id: `${item.id}-${Date.now()}-${i}`,
+        menuItemId: item.id,
+        name: item.name,
+        basePrice: parseFloat(item.basePrice),
+        quantity: 1,
+        modifiers,
+        imageUrl: item.imageUrl,
+      };
+      addItem(cartItem);
+    }
 
-    addItem(cartItem);
     trackEvent("add_to_cart", {
       product_id: item.id,
       product_name: item.name,
       price: totalPrice,
+      quantity,
     });
     toast.success(`${item.name} agregado al carrito`);
     onOpenChange(false);
     setSelectedModifiers({});
+    setQuantity(1);
   };
 
   if (!item) return null;
 
   return (
-    <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogContent className="max-h-[90vh] overflow-y-auto p-0 sm:max-w-md">
+    <div
+      className={`fixed inset-0 z-50 flex items-end sm:items-center justify-center transition-all duration-300 ${
+        open ? "visible" : "invisible pointer-events-none"
+      }`}
+    >
+      {/* Backdrop */}
+      <div
+        className={`absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity duration-300 ${
+          open ? "opacity-100" : "opacity-0"
+        }`}
+        onClick={() => handleOpenChange(false)}
+      />
+
+      {/* Modal */}
+      <div
+        className={`relative w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-t-2xl sm:rounded-2xl bg-[#FDF8F3] shadow-2xl transition-all duration-300 ${
+          open ? "translate-y-0 opacity-100" : "translate-y-full sm:translate-y-8 opacity-0"
+        }`}
+      >
+        {/* Close button */}
+        <button
+          onClick={() => handleOpenChange(false)}
+          className="absolute right-4 top-4 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-black/20 text-white backdrop-blur-sm transition-colors hover:bg-black/30"
+        >
+          <X className="h-4 w-4" />
+        </button>
+
+        {/* Image */}
         {item.imageUrl ? (
-          <div className="relative h-48 w-full shrink-0">
+          <div className="relative h-56 w-full sm:h-64">
             <Image
               src={item.imageUrl}
               alt={item.name}
               fill
               className="object-cover"
-              sizes="(max-width: 768px) 100vw, 400px"
+              sizes="(max-width: 768px) 100vw, 512px"
             />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#FDF8F3] via-transparent to-transparent" />
           </div>
-        ) : null}
+        ) : (
+          <div className="flex h-40 w-full items-center justify-center bg-[#EDE6DE]">
+            <span className="text-4xl font-semibold text-[#C25E3A]/20">
+              {item.name.charAt(0).toUpperCase()}
+            </span>
+          </div>
+        )}
 
-        <div className="px-4 pb-4">
-          <DialogHeader className="gap-1">
-            <DialogTitle className="text-lg">{item.name}</DialogTitle>
-            {item.description ? (
-              <DialogDescription>{item.description}</DialogDescription>
-            ) : null}
-            <p className="text-base font-bold text-[#C25E3A]">
-              {formatPrice(totalPrice)}
+        <div className="px-5 pb-6 sm:px-6">
+          {/* Header */}
+          <div className="-mt-6 relative">
+            <h2 className="font-[family-name:var(--font-display)] text-2xl font-semibold text-[#2A211E] text-balance">
+              {item.name}
+            </h2>
+            {item.description && (
+              <p className="mt-1.5 text-sm leading-relaxed text-[#7D6F65] text-pretty">
+                {item.description}
+              </p>
+            )}
+            <p className="mt-3 text-xl font-bold text-[#C25E3A]">
+              {formatPrice(parseFloat(item.basePrice))}
             </p>
-          </DialogHeader>
-
-          <div className="mt-4 space-y-5">
-            {item.modifiers.map((mod) => (
-              <div key={mod.id}>
-                <div className="mb-2 flex items-center gap-2">
-                  <h4 className="text-sm font-semibold text-[#2A211E]">
-                    {mod.name}
-                  </h4>
-                  {mod.isRequired && (
-                    <span className="text-[10px] font-medium text-[#C25E3A]">
-                      Obligatorio
-                    </span>
-                  )}
-                </div>
-
-                {mod.selectionType === "SINGLE" ? (
-                  <RadioGroup
-                    value={selectedModifiers[mod.id]?.[0] || ""}
-                    onValueChange={(val) =>
-                      handleSingleChange(mod.id, val)
-                    }
-                    className="gap-2"
-                  >
-                    {mod.options.map((opt) => (
-                      <label
-                        key={opt.id}
-                        className={`flex items-center gap-3 rounded-xl border p-3 transition-colors ${
-                          !opt.isAvailable
-                            ? "cursor-not-allowed opacity-50"
-                            : "cursor-pointer border-[#EDE6DE] hover:border-[#C25E3A]/30"
-                        }`}
-                      >
-                        <RadioGroupItem
-                          value={opt.id}
-                          disabled={!opt.isAvailable}
-                        />
-                        <span className="flex-1 text-sm text-[#2A211E]">
-                          {opt.name}
-                        </span>
-                        {parseFloat(opt.priceDelta) > 0 && (
-                          <span className="text-xs text-[#7D6F65]">
-                            +{formatPrice(parseFloat(opt.priceDelta))}
-                          </span>
-                        )}
-                      </label>
-                    ))}
-                  </RadioGroup>
-                ) : (
-                  <div className="space-y-2">
-                    {mod.options.map((opt) => (
-                      <label
-                        key={opt.id}
-                        className={`flex items-center gap-3 rounded-xl border p-3 transition-colors ${
-                          !opt.isAvailable
-                            ? "cursor-not-allowed opacity-50"
-                            : "cursor-pointer border-[#EDE6DE] hover:border-[#C25E3A]/30"
-                        }`}
-                      >
-                        <Checkbox
-                          checked={(
-                            selectedModifiers[mod.id] || []
-                          ).includes(opt.id)}
-                          onCheckedChange={(checked) =>
-                            handleMultipleChange(
-                              mod.id,
-                              opt.id,
-                              checked as boolean
-                            )
-                          }
-                          disabled={!opt.isAvailable}
-                        />
-                        <span className="flex-1 text-sm text-[#2A211E]">
-                          {opt.name}
-                        </span>
-                        {parseFloat(opt.priceDelta) > 0 && (
-                          <span className="text-xs text-[#7D6F65]">
-                            +{formatPrice(parseFloat(opt.priceDelta))}
-                          </span>
-                        )}
-                      </label>
-                    ))}
-                  </div>
-                )}
-              </div>
-            ))}
           </div>
 
-          <Button
-            className="mt-6 w-full bg-[#C25E3A] text-white hover:bg-[#A3492D]"
-            disabled={!allRequiredSelected || !isOpenNow}
-            onClick={handleAddToCart}
-          >
-            {isOpenNow ? `Agregar al carrito — ${formatPrice(totalPrice)}` : "Cerrado — No disponible"}
-          </Button>
+          {/* Modifiers */}
+          {item.modifiers.length > 0 && (
+            <div className="mt-6 space-y-6">
+              {item.modifiers.map((mod) => (
+                <div key={mod.id}>
+                  <div className="mb-3 flex items-center gap-2">
+                    <h4 className="text-sm font-semibold text-[#2A211E]">
+                      {mod.name}
+                    </h4>
+                    {mod.isRequired && (
+                      <span className="rounded-full bg-[#C25E3A]/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-[#C25E3A]">
+                        Obligatorio
+                      </span>
+                    )}
+                  </div>
+
+                  <div className="space-y-2">
+                    {mod.options.map((opt) => {
+                      const isSelected = (selectedModifiers[mod.id] || []).includes(opt.id);
+                      const isSingle = mod.selectionType === "SINGLE";
+
+                      return (
+                        <button
+                          key={opt.id}
+                          type="button"
+                          onClick={() => {
+                            if (!opt.isAvailable) return;
+                            if (isSingle) {
+                              handleSingleChange(mod.id, opt.id);
+                            } else {
+                              handleMultipleChange(mod.id, opt.id, !isSelected);
+                            }
+                          }}
+                          disabled={!opt.isAvailable}
+                          className={`flex w-full items-center gap-3 rounded-xl border p-3.5 text-left transition-all duration-200 ${
+                            !opt.isAvailable
+                              ? "cursor-not-allowed opacity-40 border-[#EDE6DE]"
+                              : isSelected
+                              ? "cursor-pointer border-[#C25E3A] bg-[#C25E3A]/5"
+                              : "cursor-pointer border-[#EDE6DE] hover:border-[#C25E3A]/30"
+                          }`}
+                        >
+                          <div
+                            className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 transition-colors ${
+                              isSelected
+                                ? "border-[#C25E3A] bg-[#C25E3A]"
+                                : "border-[#EDE6DE]"
+                            }`}
+                          >
+                            {isSelected && <Check className="h-3 w-3 text-white" />}
+                          </div>
+                          <span className="flex-1 text-sm text-[#2A211E]">
+                            {opt.name}
+                          </span>
+                          {parseFloat(opt.priceDelta) > 0 && (
+                            <span className="text-xs text-[#7D6F65]">
+                              +{formatPrice(parseFloat(opt.priceDelta))}
+                            </span>
+                          )}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* Quantity + Add to cart */}
+          <div className="mt-8 flex items-center gap-4">
+            {/* Quantity selector */}
+            <div className="flex items-center rounded-xl border border-[#EDE6DE] bg-white">
+              <button
+                type="button"
+                onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                className="flex h-11 w-11 items-center justify-center text-[#2A211E] transition-colors hover:bg-[#FDF8F3]"
+              >
+                <Minus className="h-4 w-4" />
+              </button>
+              <span className="flex h-11 w-10 items-center justify-center text-sm font-semibold text-[#2A211E]">
+                {quantity}
+              </span>
+              <button
+                type="button"
+                onClick={() => setQuantity(quantity + 1)}
+                className="flex h-11 w-11 items-center justify-center text-[#2A211E] transition-colors hover:bg-[#FDF8F3]"
+              >
+                <Plus className="h-4 w-4" />
+              </button>
+            </div>
+
+            {/* Add button */}
+            <button
+              type="button"
+              disabled={!allRequiredSelected || !isOpenNow}
+              onClick={handleAddToCart}
+              className={`flex flex-1 items-center justify-center gap-2 rounded-xl py-3 text-sm font-semibold text-white transition-all duration-200 ${
+                !allRequiredSelected || !isOpenNow
+                  ? "cursor-not-allowed bg-[#7D6F65]/50"
+                  : "bg-[#C25E3A] hover:bg-[#A3492D] active:scale-[0.98]"
+              }`}
+            >
+              {isOpenNow
+                ? `Agregar — ${formatPrice(totalPrice)}`
+                : "Cerrado — No disponible"}
+            </button>
+          </div>
         </div>
-      </DialogContent>
-    </Dialog>
+      </div>
+    </div>
   );
 }

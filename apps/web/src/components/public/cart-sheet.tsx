@@ -1,15 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { Minus, Plus, Trash2, ShoppingBag } from "lucide-react";
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetFooter,
-} from "@/components/ui/sheet";
-import { Button } from "@/components/ui/button";
+import { Minus, Plus, Trash2, ShoppingBag, X } from "lucide-react";
 import { useCartStore } from "@/stores/cart-store";
 
 interface CartSheetProps {
@@ -34,23 +26,55 @@ export function CartSheet({ open, onOpenChange, currency, onCheckout }: CartShee
   };
 
   return (
-    <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent side="bottom" className="h-[85vh] rounded-t-2xl px-0">
-        <SheetHeader className="px-4">
-          <SheetTitle className="flex items-center gap-2">
-            <ShoppingBag className="size-5" />
-            Tu pedido
-          </SheetTitle>
-        </SheetHeader>
+    <div
+      className={`fixed inset-0 z-50 flex items-end justify-center transition-all duration-300 ${
+        open ? "visible" : "invisible pointer-events-none"
+      }`}
+    >
+      {/* Backdrop */}
+      <div
+        className={`absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity duration-300 ${
+          open ? "opacity-100" : "opacity-0"
+        }`}
+        onClick={() => onOpenChange(false)}
+      />
 
-        <div className="flex-1 overflow-y-auto px-4 py-2">
+      {/* Sheet */}
+      <div
+        className={`relative w-full max-w-lg rounded-t-2xl bg-[#FDF8F3] shadow-2xl transition-all duration-300 ${
+          open ? "translate-y-0 opacity-100" : "translate-y-full opacity-0"
+        }`}
+        style={{ maxHeight: "85vh" }}
+      >
+        {/* Handle */}
+        <div className="flex justify-center pt-3 pb-1">
+          <div className="h-1 w-12 rounded-full bg-[#EDE6DE]" />
+        </div>
+
+        {/* Header */}
+        <div className="flex items-center justify-between px-5 py-3">
+          <h2 className="flex items-center gap-2 text-lg font-semibold text-[#2A211E]">
+            <ShoppingBag className="h-5 w-5 text-[#C25E3A]" />
+            Tu pedido
+          </h2>
+          <button
+            onClick={() => onOpenChange(false)}
+            className="flex h-8 w-8 items-center justify-center rounded-full text-[#7D6F65] transition-colors hover:bg-[#EDE6DE]"
+          >
+            <X className="h-4 w-4" />
+          </button>
+        </div>
+
+        {/* Items */}
+        <div className="overflow-y-auto px-5" style={{ maxHeight: "calc(85vh - 180px)" }}>
           {items.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-12 text-[#7D6F65]">
-              <ShoppingBag className="mb-3 size-12 opacity-30" />
-              <p className="text-sm">Tu carrito está vacío</p>
+            <div className="flex flex-col items-center justify-center py-16">
+              <ShoppingBag className="h-12 w-12 text-[#EDE6DE]" />
+              <p className="mt-4 text-base font-medium text-[#2A211E]">Tu carrito está vacío</p>
+              <p className="mt-1 text-sm text-[#7D6F65]">Agrega productos para empezar tu pedido</p>
             </div>
           ) : (
-            <div className="space-y-4">
+            <div className="space-y-4 pb-4">
               {items.map((item) => {
                 const modifiersTotal = item.modifiers.reduce((sum, mod) => {
                   return (
@@ -90,7 +114,7 @@ export function CartSheet({ open, onOpenChange, currency, onCheckout }: CartShee
                           {item.name}
                         </h4>
                         {item.modifiers.length > 0 && (
-                          <p className="mt-0.5 line-clamp-1 text-[10px] text-[#7D6F65]">
+                          <p className="mt-0.5 line-clamp-1 text-[11px] text-[#7D6F65]">
                             {item.modifiers
                               .map(
                                 (m) =>
@@ -98,20 +122,20 @@ export function CartSheet({ open, onOpenChange, currency, onCheckout }: CartShee
                                     .map((o) => o.name)
                                     .join(", ")}`
                               )
-                              .join(" | ")}
+                              .join(" · ")}
                           </p>
                         )}
                       </div>
 
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2">
+                      <div className="flex items-center justify-between mt-1">
+                        <div className="flex items-center gap-1">
                           <button
                             onClick={() =>
                               updateQuantity(item.id, item.quantity - 1)
                             }
-                            className="flex h-6 w-6 items-center justify-center rounded-md border border-[#EDE6DE] text-[#2A211E] transition-colors hover:bg-[#EDE6DE]"
+                            className="flex h-7 w-7 items-center justify-center rounded-md border border-[#EDE6DE] text-[#2A211E] transition-colors hover:bg-[#EDE6DE]"
                           >
-                            <Minus className="size-3" />
+                            <Minus className="h-3 w-3" />
                           </button>
                           <span className="min-w-[1.5rem] text-center text-sm font-medium text-[#2A211E]">
                             {item.quantity}
@@ -120,9 +144,9 @@ export function CartSheet({ open, onOpenChange, currency, onCheckout }: CartShee
                             onClick={() =>
                               updateQuantity(item.id, item.quantity + 1)
                             }
-                            className="flex h-6 w-6 items-center justify-center rounded-md border border-[#EDE6DE] text-[#2A211E] transition-colors hover:bg-[#EDE6DE]"
+                            className="flex h-7 w-7 items-center justify-center rounded-md border border-[#EDE6DE] text-[#2A211E] transition-colors hover:bg-[#EDE6DE]"
                           >
-                            <Plus className="size-3" />
+                            <Plus className="h-3 w-3" />
                           </button>
                         </div>
 
@@ -134,7 +158,7 @@ export function CartSheet({ open, onOpenChange, currency, onCheckout }: CartShee
                             onClick={() => removeItem(item.id)}
                             className="text-[#7D6F65] transition-colors hover:text-red-500"
                           >
-                            <Trash2 className="size-4" />
+                            <Trash2 className="h-4 w-4" />
                           </button>
                         </div>
                       </div>
@@ -146,28 +170,28 @@ export function CartSheet({ open, onOpenChange, currency, onCheckout }: CartShee
           )}
         </div>
 
+        {/* Footer */}
         {items.length > 0 && (
-          <SheetFooter className="border-t bg-white">
-            <div className="w-full">
-              <div className="mb-3 flex items-center justify-between text-sm">
-                <span className="text-[#7D6F65]">Subtotal</span>
-                <span className="font-semibold text-[#2A211E]">
-                  {formatPrice(subtotal)}
-                </span>
-              </div>
-              <Button
-                className="w-full bg-[#C25E3A] text-white hover:bg-[#A3492D]"
-                onClick={() => {
-                  onOpenChange(false);
-                  onCheckout();
-                }}
-              >
-                Continuar con el pedido
-              </Button>
+          <div className="border-t border-[#EDE6DE] bg-white px-5 py-4">
+            <div className="mb-3 flex items-center justify-between text-sm">
+              <span className="text-[#7D6F65]">Subtotal</span>
+              <span className="font-semibold text-[#2A211E]">
+                {formatPrice(subtotal)}
+              </span>
             </div>
-          </SheetFooter>
+            <button
+              type="button"
+              className="w-full rounded-xl bg-[#C25E3A] py-3.5 text-sm font-semibold text-white transition-all hover:bg-[#A3492D] active:scale-[0.98]"
+              onClick={() => {
+                onOpenChange(false);
+                onCheckout();
+              }}
+            >
+              Continuar con el pedido
+            </button>
+          </div>
         )}
-      </SheetContent>
-    </Sheet>
+      </div>
+    </div>
   );
 }

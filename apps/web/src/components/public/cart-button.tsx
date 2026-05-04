@@ -11,20 +11,21 @@ interface CartButtonProps {
 export function CartButton({ onClick, disabled }: CartButtonProps) {
   const count = useCartStore((s) => s.itemCount());
 
-  if (disabled) return null;
+  if (disabled || count === 0) return null;
 
   return (
-    <button
-      onClick={onClick}
-      className="fixed bottom-6 right-6 z-40 flex h-14 w-14 items-center justify-center rounded-full bg-[#C25E3A] text-white shadow-[0_10px_15px_-3px_rgba(42,33,30,0.12),0_4px_6px_-4px_rgba(42,33,30,0.06)] transition-transform hover:scale-105 active:scale-95"
-      aria-label="Ver carrito"
-    >
-      <ShoppingBag className="size-6" />
-      {count > 0 && (
-        <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-[#2A211E] text-[10px] font-bold">
+    <div className="fixed bottom-0 left-0 right-0 z-40 flex justify-center pb-5 px-4 pointer-events-none">
+      <button
+        onClick={onClick}
+        className="pointer-events-auto flex items-center gap-3 rounded-full bg-[#C25E3A] px-6 py-3.5 text-white shadow-[0_10px_25px_-5px_rgba(194,94,58,0.4)] transition-all duration-200 hover:scale-105 active:scale-95"
+        aria-label="Ver carrito"
+      >
+        <ShoppingBag className="h-5 w-5" />
+        <span className="text-sm font-semibold">Ver pedido</span>
+        <span className="flex h-6 min-w-[1.5rem] items-center justify-center rounded-full bg-white/20 px-1.5 text-xs font-bold">
           {count}
         </span>
-      )}
-    </button>
+      </button>
+    </div>
   );
 }

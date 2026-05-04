@@ -1,8 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { MessageCircle } from "lucide-react";
-import { OpenStatusBadge } from "./open-status-badge";
+import { MapPin, Clock } from "lucide-react";
 import type { PublicBusiness } from "@/hooks/use-public-business";
 
 interface HeroSectionProps {
@@ -11,72 +10,145 @@ interface HeroSectionProps {
 }
 
 export function HeroSection({ business, isOpenNow = true }: HeroSectionProps) {
-  const whatsappLink = `https://wa.me/${business.whatsappNumber.replace(/\D/g, "")}?text=Hola%20${encodeURIComponent(business.name)}!`;
+  const hasBanner = !!business.bannerUrl;
 
-  return (
-    <div className="relative">
-      {business.bannerUrl && (
-        <div className="relative h-44 w-full overflow-hidden sm:h-60">
+  if (hasBanner) {
+    return (
+      <section className="relative">
+        {/* Banner image */}
+        <div className="relative h-[45vh] min-h-[300px] w-full overflow-hidden sm:h-[50vh]">
           <Image
-            src={business.bannerUrl}
-            alt={`Banner de ${business.name}`}
+            src={business.bannerUrl!}
+            alt={business.name}
             fill
             className="object-cover"
             priority
             sizes="100vw"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#2A211E]/60 via-[#2A211E]/10 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#2A211E]/80 via-[#2A211E]/20 to-transparent" />
         </div>
-      )}
 
-      <div className={business.bannerUrl ? "relative -mt-12 px-4 sm:-mt-16" : "relative px-4 pt-6"}>
-        <div className="mx-auto max-w-xl">
-          <div className="flex items-end gap-4">
-            {business.logoUrl ? (
-              <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-2xl border-[3px] border-[#FDF8F3] bg-white shadow-[0_10px_15px_-3px_rgba(42,33,30,0.1),0_4px_6px_-4px_rgba(42,33,30,0.05)] sm:h-24 sm:w-24">
-                <Image
-                  src={business.logoUrl}
-                  alt={business.name}
-                  fill
-                  className="object-cover"
-                  sizes="96px"
-                />
-              </div>
-            ) : (
-              <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-2xl border-[3px] border-[#FDF8F3] bg-[#C25E3A] text-xl font-bold text-white shadow-[0_10px_15px_-3px_rgba(42,33,30,0.1),0_4px_6px_-4px_rgba(42,33,30,0.05)] sm:h-24 sm:w-24">
-                {business.name.charAt(0).toUpperCase()}
-              </div>
-            )}
-
-            <div className="mb-1 flex-1">
-              <h1 className="font-[family-name:var(--font-display)] text-xl font-semibold leading-tight text-[#2A211E] sm:text-2xl">
-                {business.name}
-              </h1>
-              <div className="mt-1.5 flex items-center gap-2">
-                <OpenStatusBadge isOpen={business.isOpenNow} />
-              </div>
+        {/* Overlapping content */}
+        <div className="relative -mt-20 px-4 sm:-mt-24">
+          <div className="mx-auto max-w-2xl">
+            <div className="flex items-end gap-4">
+              <Logo business={business} />
+              <StatusBadge isOpenNow={isOpenNow} />
             </div>
+            <BusinessMeta business={business} isOpenNow={isOpenNow} />
           </div>
+        </div>
+      </section>
+    );
+  }
 
-          {business.description && (
-            <p className="mt-3 text-sm leading-relaxed text-[#7D6F65]">
-              {business.description}
-            </p>
-          )}
+  // Compact hero when no banner — no giant black block
+  return (
+    <section className="relative bg-[#FDF8F3] pt-10 pb-6 sm:pt-14 sm:pb-8">
+      {/* Subtle decorative shapes */}
+      <div className="absolute right-0 top-0 h-64 w-64 opacity-[0.03]" style={{
+        background: "radial-gradient(circle at 70% 30%, #C25E3A 0%, transparent 70%)"
+      }} />
+      <div className="absolute left-0 bottom-0 h-48 w-48 opacity-[0.02]" style={{
+        background: "radial-gradient(circle at 30% 70%, #C25E3A 0%, transparent 70%)"
+      }} />
 
-          {isOpenNow && (
-            <a
-              href={whatsappLink}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-4 flex w-full items-center justify-center gap-2 rounded-xl border border-[#EDE6DE] bg-white py-3 text-sm font-semibold text-[#2A211E] shadow-sm transition-all hover:bg-[#FDF8F3] hover:shadow-[0_10px_15px_-3px_rgba(42,33,30,0.06),0_4px_6px_-4px_rgba(42,33,30,0.03)] active:scale-[0.98]"
-            >
-              <MessageCircle className="h-5 w-5 text-[#25D366]" />
-              Escribir por WhatsApp
-            </a>
-          )}
+      <div className="relative mx-auto max-w-2xl px-4">
+        <div className="flex items-start gap-5">
+          <Logo business={business} large />
+          <div className="flex-1 pt-2">
+            <StatusBadge isOpenNow={isOpenNow} />
+            <BusinessMeta business={business} isOpenNow={isOpenNow} />
+          </div>
         </div>
       </div>
+    </section>
+  );
+}
+
+function Logo({ business, large = false }: { business: PublicBusiness; large?: boolean }) {
+  const sizeClass = large
+    ? "h-20 w-20 sm:h-24 sm:w-24"
+    : "h-24 w-24 sm:h-28 sm:w-28";
+
+  if (business.logoUrl) {
+    return (
+      <div
+        className={`relative ${sizeClass} shrink-0 overflow-hidden rounded-2xl border-4 border-[#FDF8F3] bg-white shadow-lg`}
+      >
+        <Image
+          src={business.logoUrl}
+          alt={business.name}
+          fill
+          className="object-cover"
+          sizes="112px"
+        />
+      </div>
+    );
+  }
+
+  return (
+    <div
+      className={`flex ${sizeClass} shrink-0 items-center justify-center rounded-2xl border-4 border-[#FDF8F3] bg-[#C25E3A] text-2xl font-bold text-white shadow-lg`}
+    >
+      {business.name.charAt(0).toUpperCase()}
     </div>
+  );
+}
+
+function StatusBadge({ isOpenNow }: { isOpenNow: boolean }) {
+  return (
+    <span
+      className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium uppercase tracking-wider ${
+        isOpenNow
+          ? "bg-[#4A6B5D] text-white"
+          : "bg-[#C25E3A] text-white"
+      }`}
+    >
+      <span className="relative flex h-2 w-2">
+        <span
+          className={`absolute inline-flex h-full w-full animate-ping rounded-full opacity-75 ${
+            isOpenNow ? "bg-white" : "bg-white/50"
+          }`}
+        />
+        <span
+          className={`relative inline-flex h-2 w-2 rounded-full ${
+            isOpenNow ? "bg-white" : "bg-white/80"
+          }`}
+        />
+      </span>
+      {isOpenNow ? "Abierto ahora" : "Cerrado"}
+    </span>
+  );
+}
+
+function BusinessMeta({ business, isOpenNow }: { business: PublicBusiness; isOpenNow: boolean }) {
+  return (
+    <>
+      <h1 className="mt-4 font-[family-name:var(--font-display)] text-3xl font-semibold leading-tight tracking-tight text-[#2A211E] sm:text-4xl text-balance">
+        {business.name}
+      </h1>
+
+      {business.description && (
+        <p className="mt-2 max-w-lg text-base leading-relaxed text-[#7D6F65] text-pretty">
+          {business.description}
+        </p>
+      )}
+
+      <div className="mt-3 flex flex-wrap items-center gap-4 text-sm text-[#7D6F65]">
+        {business.address && (
+          <div className="flex items-center gap-1.5">
+            <MapPin className="h-4 w-4 text-[#C25E3A]" />
+            <span className="line-clamp-1">{business.address}</span>
+          </div>
+        )}
+        {business.whatsappNumber && (
+          <div className="flex items-center gap-1.5">
+            <Clock className="h-4 w-4 text-[#C25E3A]" />
+            <span>Pedidos por WhatsApp</span>
+          </div>
+        )}
+      </div>
+    </>
   );
 }

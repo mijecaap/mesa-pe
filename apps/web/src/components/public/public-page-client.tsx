@@ -63,7 +63,7 @@ export function PublicPageClient({ business }: PublicPageClientProps) {
       </main>
 
       {business.plan === "FREE" && (
-        <footer className="border-t border-[#EDE6DE] bg-[#EDE6DE] py-4 text-center">
+        <footer className="border-t border-white/10 bg-[#1a1513] py-5 text-center">
           <p className="text-xs text-[#7D6F65]">
             Carta digital creada con{" "}
             <a
@@ -78,7 +78,11 @@ export function PublicPageClient({ business }: PublicPageClientProps) {
         </footer>
       )}
 
-      <CartButton onClick={() => business.isOpenNow && setCartOpen(true)} disabled={!business.isOpenNow} />
+      <CartButton
+        onClick={() => business.isOpenNow && setCartOpen(true)}
+        disabled={!business.isOpenNow}
+      />
+
       <CartSheet
         open={cartOpen}
         onOpenChange={setCartOpen}
@@ -93,6 +97,7 @@ export function PublicPageClient({ business }: PublicPageClientProps) {
           setCheckoutOpen(true);
         }}
       />
+
       <ProductModal
         item={selectedProduct}
         open={productModalOpen}
@@ -100,11 +105,13 @@ export function PublicPageClient({ business }: PublicPageClientProps) {
         currency={business.currency}
         isOpenNow={business.isOpenNow}
       />
+
       <CheckoutModal
         business={business}
         open={checkoutOpen}
         onOpenChange={setCheckoutOpen}
       />
+
       {!business.isOpenNow && (
         <ClosedOverlay
           openingHours={business.openingHours}

@@ -24,34 +24,45 @@ export function PhotoGallery({ business }: PhotoGalleryProps) {
   if (uniqueImages.length === 0) return null;
 
   return (
-    <div className="mx-auto max-w-xl px-4 py-6">
-      <h2 className="mb-3 font-[family-name:var(--font-display)] text-lg font-semibold text-[#2A211E]">Galería</h2>
-      <div className="grid grid-cols-3 gap-2 sm:grid-cols-4">
-        {uniqueImages.slice(0, 8).map((url, idx) => (
-          <button
-            key={idx}
-            onClick={() => setSelectedImage(url)}
-            className="relative aspect-square overflow-hidden rounded-xl"
-          >
-            <Image
-              src={url}
-              alt={`Foto ${idx + 1}`}
-              fill
-              className="object-cover transition-transform hover:scale-105"
-              sizes="(max-width: 640px) 33vw, 160px"
-            />
-          </button>
-        ))}
+    <section className="border-t border-[#EDE6DE] bg-white py-10 sm:py-14">
+      <div className="mx-auto max-w-2xl px-4">
+        <div className="mb-6">
+          <span className="text-xs font-medium uppercase tracking-[0.2em] text-[#C25E3A]">
+            Galería
+          </span>
+          <h2 className="mt-2 font-[family-name:var(--font-display)] text-2xl font-semibold text-[#2A211E] sm:text-3xl">
+            Un vistazo a {business.name}
+          </h2>
+        </div>
+
+        <div className="grid grid-cols-3 gap-2 sm:grid-cols-4 sm:gap-3">
+          {uniqueImages.slice(0, 8).map((url, idx) => (
+            <button
+              key={idx}
+              onClick={() => setSelectedImage(url)}
+              className="relative aspect-square overflow-hidden rounded-xl bg-[#EDE6DE] transition-transform duration-300 hover:scale-[1.02]"
+            >
+              <Image
+                src={url}
+                alt={`Foto ${idx + 1}`}
+                fill
+                className="object-cover transition-transform duration-500 hover:scale-110"
+                sizes="(max-width: 640px) 33vw, 160px"
+              />
+            </button>
+          ))}
+        </div>
       </div>
 
+      {/* Lightbox */}
       {selectedImage && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 backdrop-blur-sm animate-fade-in p-4"
           onClick={() => setSelectedImage(null)}
         >
           <button
             onClick={() => setSelectedImage(null)}
-            className="absolute right-4 top-4 flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white backdrop-blur-sm"
+            className="absolute right-4 top-4 flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white backdrop-blur-sm transition-colors hover:bg-white/20"
           >
             <X className="h-5 w-5" />
           </button>
@@ -66,6 +77,6 @@ export function PhotoGallery({ business }: PhotoGalleryProps) {
           </div>
         </div>
       )}
-    </div>
+    </section>
   );
 }

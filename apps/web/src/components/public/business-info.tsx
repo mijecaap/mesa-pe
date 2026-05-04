@@ -1,7 +1,6 @@
 "use client";
 
-import { Clock, MapPin, CreditCard, ChevronDown, ChevronUp } from "lucide-react";
-import { useState } from "react";
+import { Clock, MapPin, CreditCard, Phone } from "lucide-react";
 import type { PublicBusiness } from "@/hooks/use-public-business";
 
 const dayNames = [
@@ -19,89 +18,104 @@ interface BusinessInfoProps {
 }
 
 export function BusinessInfo({ business }: BusinessInfoProps) {
-  const [showHours, setShowHours] = useState(false);
-
   const sortedHours = [...business.openingHours].sort(
     (a, b) => a.dayOfWeek - b.dayOfWeek
   );
 
+  const today = new Date().getDay();
+  const todayHours = sortedHours.find((h) => h.dayOfWeek === today);
+
   return (
-    <div className="mx-auto max-w-xl px-4 py-6">
-      <div className="space-y-4 rounded-2xl border border-[#EDE6DE] bg-white p-5">
-        <h2 className="text-xs font-semibold uppercase tracking-[0.15em] text-[#7D6F65]">
-          Información
-        </h2>
+    <section className="border-t border-[#EDE6DE] bg-[#2A211E] py-16 sm:py-20">
+      <div className="mx-auto max-w-2xl px-4">
+        {/* Header */}
+        <div className="mb-12">
+          <span className="text-xs font-medium uppercase tracking-[0.2em] text-[#C25E3A]">
+            Información
+          </span>
+          <h2 className="mt-3 font-[family-name:var(--font-display)] text-2xl font-semibold text-white sm:text-3xl text-balance">
+            Todo lo que necesitas saber
+          </h2>
+        </div>
 
-        {business.address && (
+        <div className="grid gap-10 sm:grid-cols-2">
+          {/* Address */}
+          {business.address && (
+            <div className="flex items-start gap-3">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/10">
+                <MapPin className="h-5 w-5 text-[#C25E3A]" />
+              </div>
+              <div>
+                <h3 className="text-sm font-semibold text-white">Dirección</h3>
+                <p className="mt-1.5 text-sm leading-relaxed text-[#9C9189]">
+                  {business.address}
+                </p>
+                {business.googleMapsUrl && (
+                  <a
+                    href={business.googleMapsUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-2 inline-block text-xs font-medium text-[#C25E3A] hover:underline"
+                  >
+                    Ver en Google Maps
+                  </a>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* Hours */}
           <div className="flex items-start gap-3">
-            <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-[#C25E3A]" />
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/10">
+              <Clock className="h-5 w-5 text-[#C25E3A]" />
+            </div>
             <div className="flex-1">
-              <p className="text-sm text-[#2A211E]">{business.address}</p>
-              {business.googleMapsUrl && (
-                <a
-                  href={business.googleMapsUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="mt-1 inline-block text-xs font-medium text-[#C25E3A] hover:underline"
-                >
-                  Ver en Google Maps →
-                </a>
+              <h3 className="text-sm font-semibold text-white">Horarios</h3>
+              {todayHours && (
+                <p className="mt-1.5 text-sm text-[#9C9189]">
+                  Hoy:{" "}
+                  {todayHours.isClosed ? (
+                    <span className="text-[#C25E3A]">Cerrado</span>
+                  ) : (
+                    <span className="text-white font-medium">
+                      {todayHours.openTime} – {todayHours.closeTime}
+                    </span>
+                  )}
+                </p>
               )}
-            </div>
-          </div>
-        )}
-
-        <div className="border-t border-[#EDE6DE] pt-4">
-          <button
-            onClick={() => setShowHours(!showHours)}
-            className="flex w-full items-center justify-between gap-3"
-          >
-            <div className="flex items-center gap-3">
-              <Clock className="h-4 w-4 shrink-0 text-[#C25E3A]" />
-              <span className="text-sm text-[#2A211E]">Horarios de atención</span>
-            </div>
-            {showHours ? (
-              <ChevronUp className="h-4 w-4 text-[#7D6F65] transition-transform" />
-            ) : (
-              <ChevronDown className="h-4 w-4 text-[#7D6F65] transition-transform" />
-            )}
-          </button>
-
-          <div
-            className={`grid transition-all duration-300 ease-out ${
-              showHours ? "mt-3 grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
-            }`}
-          >
-            <div className="overflow-hidden">
-              <div className="space-y-1.5 pl-7">
+              <div className="mt-4 space-y-2">
                 {sortedHours.map((h) => (
-                  <div key={h.id} className="flex justify-between text-sm">
-                    <span className="text-[#7D6F65]">{dayNames[h.dayOfWeek]}</span>
-                    <span className="font-medium text-[#2A211E]">
-                      {h.isClosed ? (
-                        <span className="text-[#C25E3A]">Cerrado</span>
-                      ) : (
-                        `${h.openTime} – ${h.closeTime}`
-                      )}
+                  <div
+                    key={h.dayOfWeek}
+                    className={`flex justify-between text-sm ${
+                      h.dayOfWeek === today ? "text-white" : "text-[#7D6F65]"
+                    }`}
+                  >
+                    <span className={h.dayOfWeek === today ? "font-medium" : ""}>
+                      {dayNames[h.dayOfWeek]}
+                    </span>
+                    <span className={h.dayOfWeek === today ? "font-medium text-white" : ""}>
+                      {h.isClosed ? "Cerrado" : `${h.openTime} – ${h.closeTime}`}
                     </span>
                   </div>
                 ))}
               </div>
             </div>
           </div>
-        </div>
 
-        {business.paymentMethods.length > 0 && (
-          <div className="border-t border-[#EDE6DE] pt-4">
+          {/* Payment methods */}
+          {business.paymentMethods.length > 0 && (
             <div className="flex items-start gap-3">
-              <CreditCard className="mt-0.5 h-4 w-4 shrink-0 text-[#C25E3A]" />
-              <div className="flex-1">
-                <p className="text-sm text-[#2A211E]">Métodos de pago</p>
-                <div className="mt-1.5 flex flex-wrap gap-1.5">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/10">
+                <CreditCard className="h-5 w-5 text-[#C25E3A]" />
+              </div>
+              <div>
+                <h3 className="text-sm font-semibold text-white">Pagos</h3>
+                <div className="mt-2.5 flex flex-wrap gap-2">
                   {business.paymentMethods.map((pm) => (
                     <span
                       key={pm.id}
-                      className="inline-flex items-center rounded-lg bg-[#EDE6DE] px-2.5 py-1 text-xs font-medium text-[#2A211E]"
+                      className="inline-flex items-center rounded-lg bg-white/10 px-3 py-1.5 text-xs font-medium text-white"
                     >
                       {pm.name}
                     </span>
@@ -109,9 +123,32 @@ export function BusinessInfo({ business }: BusinessInfoProps) {
                 </div>
               </div>
             </div>
-          </div>
-        )}
+          )}
+
+          {/* WhatsApp */}
+          {business.whatsappNumber && (
+            <div className="flex items-start gap-3">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/10">
+                <Phone className="h-5 w-5 text-[#C25E3A]" />
+              </div>
+              <div>
+                <h3 className="text-sm font-semibold text-white">Contacto</h3>
+                <p className="mt-1.5 text-sm text-[#9C9189]">
+                  Pedidos por WhatsApp
+                </p>
+                <a
+                  href={`https://wa.me/${business.whatsappNumber.replace(/\D/g, "")}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-2 inline-flex items-center gap-1.5 text-xs font-medium text-[#C25E3A] hover:underline"
+                >
+                  Escribir ahora
+                </a>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
-    </div>
+    </section>
   );
 }

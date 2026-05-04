@@ -49,6 +49,16 @@
   --radius-2xl: calc(var(--radius) * 1.8);
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
+
+  /* Custom colors for Mesa.pe design system */
+  --color-terracotta: #C25E3A;
+  --color-terracotta-deep: #A3492D;
+  --color-cream: #FDF8F3;
+  --color-coffee: #2A211E;
+  --color-coffee-deep: #1a1513;
+  --color-moss: #4A6B5D;
+  --color-warm-gray: #7D6F65;
+  --color-sand: #EDE6DE;
 }
 
 :root {
@@ -129,6 +139,7 @@
   }
   html {
     @apply font-sans;
+    scroll-behavior: smooth;
   }
 }
 
@@ -137,6 +148,7 @@
   padding-inline: var(--container-padding);
 }
 
+/* Animation keyframes */
 @keyframes fade-in-up {
   from {
     opacity: 0;
@@ -157,6 +169,26 @@
   }
 }
 
+@keyframes scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes slide-up {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
 @keyframes float {
   0%, 100% {
     transform: translateY(0px);
@@ -166,6 +198,16 @@
   }
 }
 
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+/* Animation utilities */
 .animate-fade-in-up {
   animation: fade-in-up 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
@@ -174,41 +216,79 @@
   animation: fade-in 0.6s ease-out forwards;
 }
 
+.animate-scale-in {
+  animation: scale-in 0.4s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.animate-slide-up {
+  animation: slide-up 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
 .animate-float {
   animation: float 6s ease-in-out infinite;
 }
 
-.animation-delay-150 {
-  animation-delay: 150ms;
+.animate-shimmer {
+  background: linear-gradient(90deg, transparent 25%, rgba(255,255,255,0.5) 50%, transparent 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
 }
 
-.animation-delay-300 {
-  animation-delay: 300ms;
-}
-
-.animation-delay-450 {
-  animation-delay: 450ms;
-}
-
-.animation-delay-600 {
-  animation-delay: 600ms;
-}
-
-.animation-delay-750 {
-  animation-delay: 750ms;
-}
+/* Stagger delays */
+.animation-delay-100 { animation-delay: 100ms; }
+.animation-delay-150 { animation-delay: 150ms; }
+.animation-delay-200 { animation-delay: 200ms; }
+.animation-delay-300 { animation-delay: 300ms; }
+.animation-delay-400 { animation-delay: 400ms; }
+.animation-delay-450 { animation-delay: 450ms; }
+.animation-delay-500 { animation-delay: 500ms; }
+.animation-delay-600 { animation-delay: 600ms; }
+.animation-delay-750 { animation-delay: 750ms; }
+.animation-delay-800 { animation-delay: 800ms; }
 
 .opacity-0-start {
   opacity: 0;
 }
 
+/* Hide scrollbar utility */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* Editorial utilities */
+.text-balance {
+  text-wrap: balance;
+}
+
+.text-pretty {
+  text-wrap: pretty;
+}
+
+/* Touch target expansion */
+.touch-target::before {
+  content: '';
+  position: absolute;
+  inset: -8px;
+}
+
+/* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
   .animate-fade-in-up,
   .animate-fade-in,
-  .animate-float {
+  .animate-scale-in,
+  .animate-slide-up,
+  .animate-float,
+  .animate-shimmer {
     animation: none;
   }
   .opacity-0-start {
     opacity: 1;
+  }
+  html {
+    scroll-behavior: auto;
   }
 }
