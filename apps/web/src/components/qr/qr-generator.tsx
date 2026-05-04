@@ -1,0 +1,131 @@
+"use client";
+
+import { useRef, useCallback, useState } from "react";
+import { QRCodeSVG, QRCodeCanvas } from "qrcode.react";
+import { Download, Copy, Check } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { toast } from "sonner";
+
+interface QrGeneratorProps {
+  slug: string;
+  logoUrl?: string | null;
+  businessName: string;
+}
+
+export function QrGenerator({ slug, logoUrl, businessName }: QrGeneratorProps) {
+  const svgRef = useRef<SVGSVGElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [copied, setCopied] = useState(false);
+
+  const publicUrl = typeof window !== "undefined" ? `${window.location.origin}/${slug}` : `https://mesa.pe/${slug}`;
+
+  const downloadPng = useCallback(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const link = document.createElement("a");
+    link.download = `${slug}-qr.png`;
+    link.href = canvas.toDataURL("image/png");
+    link.click();
+    toast.success("QR descargado en PNG");
+  }, [slug]);
+
+  const downloadSvg = useCallback(() => {
+    const svg = svgRef.current;
+    if (!svg) return;
+
+    const serializer = new XMLSerializer();
+    const source = serializer.serializeToString(svg);
+    const blob = new Blob([source], { type: "image/svg+xml;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+
+    const link = document.createElement("a");
+    link.download = `${slug}-qr.svg`;
+    link.href = url;
+    link.click();
+
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+    toast.success("QR descargado en SVG");
+  }, [slug]);
+
+  const copyLink = useCallback(() => {
+    navigator.clipboard.writeText(publicUrl).then(() => {
+      setCopied(true);
+      toast.success("Link copiado al portapapeles");
+      setTimeout(() => setCopied(false), 2000);
+    });
+  }, [publicUrl]);
+
+  const qrSize = 280;
+  const logoSize = 56;
+
+  return (
+    <Card className="max-w-md mx-auto">
+      <CardHeader className="text-center">
+        <CardTitle>Código QR de {businessName}</CardTitle>
+        <CardDescription>
+          Escanea para ver la carta digital
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="flex flex-col items-center gap-6">
+        {/* Hidden canvas for PNG download */}
+        <div className="hidden">
+          <QRCodeCanvas
+            value={publicUrl}
+            size={qrSize}
+            level="H"
+            ref={canvasRef}
+          />
+        </div>
+
+        {/* Visible SVG QR */}
+        <div className="relative rounded-xl border bg-white p-4 shadow-sm">
+          <QRCodeSVG
+            value={publicUrl}
+            size={qrSize}
+            level="H"
+            ref={svgRef}
+            includeMargin
+          />
+          {logoUrl && (
+            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+              <div
+                className="rounded-lg border-2 border-white bg-white shadow-sm overflow-hidden"
+                style={{ width: logoSize, height: logoSize }}
+              >
+                <img
+                  src={logoUrl}
+                  alt=""
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            </div>
+          )}
+        </div>
+
+        <div className="flex flex-col gap-2 w-full">
+          <div className="flex items-center gap-2 rounded-lg border bg-muted px-3 py-2">
+            <span className="flex-1 truncate text-sm text-muted-foreground">
+              {publicUrl}
+            </span>
+            <Button variant="ghost" size="sm" onClick={copyLink} className="shrink-0">
+              {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+            </Button>
+          </div>
+
+          <div className="grid grid-cols-2 gap-2">
+            <Button variant="outline" onClick={downloadPng} className="w-full">
+              <Download className="mr-2 h-4 w-4" />
+              PNG
+            </Button>
+            <Button variant="outline" onClick={downloadSvg} className="w-full">
+              <Download className="mr-2 h-4 w-4" />
+              SVG
+            </Button>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  );
+}

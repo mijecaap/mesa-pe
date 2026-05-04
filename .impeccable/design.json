@@ -1,0 +1,215 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-05-04T00:00:00.000Z",
+  "title": "Design System: Mesa.pe",
+  "extensions": {
+    "colorMeta": {
+      "terracotta": {
+        "role": "primary",
+        "displayName": "Terracota Caliente",
+        "canonical": "oklch(60% 0.15 45)",
+        "tonalRamp": ["#5a2a1a", "#8c4229", "#C25E3A", "#d98b6f", "#f0cbbd", "#f8e8e0", "#fdf4f0", "#FFFFFF"]
+      },
+      "terracotta-deep": {
+        "role": "primary",
+        "displayName": "Terracota Profundo",
+        "canonical": "oklch(50% 0.14 45)",
+        "tonalRamp": ["#5a2a1a", "#8c4229", "#A3492D", "#c26a4a", "#d9967d", "#f0cbbd", "#f8e8e0", "#FFFFFF"]
+      },
+      "cream": {
+        "role": "neutral",
+        "displayName": "Crema",
+        "canonical": "oklch(98% 0.005 60)",
+        "tonalRamp": ["#8c7a6e", "#a8988a", "#c4b6ab", "#ddd5cc", "#e5ddd4", "#EDE6DE", "#F5EFE8", "#FDF8F3"]
+      },
+      "coffee": {
+        "role": "neutral",
+        "displayName": "Café Oscuro",
+        "canonical": "oklch(20% 0.02 30)",
+        "tonalRamp": ["#1a1513", "#2A211E", "#3d312c", "#574a45", "#6e6058", "#8a7d75", "#a89e97", "#c4bdb7"]
+      },
+      "coffee-deep": {
+        "role": "neutral",
+        "displayName": "Café Profundo",
+        "canonical": "oklch(15% 0.015 30)",
+        "tonalRamp": ["#0f0c0b", "#1a1513", "#2A211E", "#3d312c", "#574a45", "#6e6058", "#8a7d75", "#a89e97"]
+      },
+      "moss": {
+        "role": "secondary",
+        "displayName": "Musgo Andino",
+        "canonical": "oklch(45% 0.06 160)",
+        "tonalRamp": ["#2a3f36", "#3a5549", "#4A6B5D", "#5e8574", "#6b9080", "#8aad9d", "#a8c4b8", "#c8ddd2"]
+      },
+      "warm-gray": {
+        "role": "neutral",
+        "displayName": "Gris Cálido",
+        "canonical": "oklch(55% 0.03 45)",
+        "tonalRamp": ["#3d3530", "#524840", "#685c53", "#7D6F65", "#95857a", "#a89e97", "#b8ada5", "#d0c8c1"]
+      },
+      "sand": {
+        "role": "neutral",
+        "displayName": "Arena",
+        "canonical": "oklch(92% 0.015 60)",
+        "tonalRamp": ["#c4b6ab", "#d0c8c1", "#ddd5cc", "#e5ddd4", "#EDE6DE", "#f2ece6", "#f5efe8", "#faf7f4"]
+      },
+      "white": {
+        "role": "neutral",
+        "displayName": "Blanco",
+        "canonical": "oklch(100% 0 0)",
+        "tonalRamp": ["#a89e97", "#c4bdb7", "#d0c8c1", "#ddd5cc", "#e5ddd4", "#EDE6DE", "#F5EFE8", "#FFFFFF"]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Títulos hero de landing. Solo en h1."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Títulos de sección (Features, Pricing, FAQ)."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Títulos de card, nombres de producto, subtítulos de dashboard."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Párrafos, descripciones, contenido de formularios. Máximo 70ch."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Etiquetas de sección, metadata, badges. Uppercase con tracking amplio."
+      }
+    },
+    "shadows": [
+      {
+        "name": "response",
+        "value": "0 10px 15px -3px rgba(42, 33, 30, 0.08), 0 4px 6px -4px rgba(42, 33, 30, 0.04)",
+        "purpose": "Hover en cards y botones. Sutil, nunca dramática."
+      },
+      {
+        "name": "overlay",
+        "value": "0 25px 50px -12px rgba(42, 33, 30, 0.15)",
+        "purpose": "Modales, sheets, dropdowns. La única sombra profunda permitida."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease-standard",
+        "value": "cubic-bezier(0.4, 0, 0.2, 1)",
+        "purpose": "Transiciones de estado por defecto (hover, focus)."
+      },
+      {
+        "name": "ease-out-quart",
+        "value": "cubic-bezier(0.22, 1, 0.36, 1)",
+        "purpose": "Entradas animadas (fade-in-up). Nunca elástico ni con rebote."
+      },
+      {
+        "name": "ease-out",
+        "value": "ease-out",
+        "purpose": "Fade-in simples."
+      },
+      {
+        "name": "ease-in-out",
+        "value": "ease-in-out",
+        "purpose": "Animaciones cíclicas (float)."
+      }
+    ],
+    "breakpoints": [
+      { "name": "sm", "value": "640px" },
+      { "name": "md", "value": "768px" },
+      { "name": "lg", "value": "1024px" },
+      { "name": "xl", "value": "1280px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Botón de acción principal. Terracota sobre blanco. Usado en CTA de landing y dashboard.",
+      "html": "<button class=\"ds-btn-primary\">Crear carta gratis</button>",
+      "css": ".ds-btn-primary { display: inline-flex; align-items: center; justify-content: center; gap: 0.375rem; height: 2rem; padding: 0.5rem 1.25rem; border: 1px solid transparent; border-radius: 0.625rem; background-color: #C25E3A; color: #FFFFFF; font-family: 'DM Sans', ui-sans-serif, system-ui, sans-serif; font-size: 0.875rem; font-weight: 500; line-height: 1.25rem; white-space: nowrap; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer; } .ds-btn-primary:hover { background-color: #A3492D; } .ds-btn-primary:focus-visible { outline: none; border-color: rgba(125, 111, 101, 0.5); box-shadow: 0 0 0 3px rgba(125, 111, 101, 0.25); }"
+    },
+    {
+      "name": "Outline Button",
+      "kind": "button",
+      "refersTo": "button-outline",
+      "description": "Botón secundario con borde. Usado para acciones de menor prioridad o navegación.",
+      "html": "<button class=\"ds-btn-outline\">Ver demo</button>",
+      "css": ".ds-btn-outline { display: inline-flex; align-items: center; justify-content: center; gap: 0.375rem; height: 2rem; padding: 0.5rem 1.25rem; border: 1px solid #2A211E; border-radius: 0.625rem; background-color: transparent; color: #2A211E; font-family: 'DM Sans', ui-sans-serif, system-ui, sans-serif; font-size: 0.875rem; font-weight: 500; line-height: 1.25rem; white-space: nowrap; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer; } .ds-btn-outline:hover { background-color: #2A211E; color: #FDF8F3; } .ds-btn-outline:focus-visible { outline: none; border-color: rgba(125, 111, 101, 0.5); box-shadow: 0 0 0 3px rgba(125, 111, 101, 0.25); }"
+    },
+    {
+      "name": "Card",
+      "kind": "card",
+      "refersTo": "card-default",
+      "description": "Contenedor de información. Plano en reposo, sombra sutil en hover.",
+      "html": "<div class=\"ds-card\"><div class=\"ds-card-content\"><h3 class=\"ds-card-title\">Título</h3><p class=\"ds-card-desc\">Descripción del contenido.</p></div></div>",
+      "css": ".ds-card { display: flex; flex-direction: column; gap: 1rem; overflow: hidden; border-radius: 1.125rem; background-color: #FFFFFF; color: #2A211E; font-size: 0.875rem; line-height: 1.25rem; box-shadow: none; border: 1px solid #EDE6DE; padding: 1.5rem; transition: box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1); } .ds-card:hover { box-shadow: 0 10px 15px -3px rgba(42, 33, 30, 0.08), 0 4px 6px -4px rgba(42, 33, 30, 0.04); } .ds-card-title { font-family: 'DM Sans', ui-sans-serif, system-ui, sans-serif; font-size: 1.25rem; font-weight: 600; line-height: 1.3; margin: 0; } .ds-card-desc { color: #7D6F65; margin: 0.75rem 0 0; }"
+    },
+    {
+      "name": "Input",
+      "kind": "input",
+      "refersTo": "input-default",
+      "description": "Campo de texto. Borde arena, fondo transparente. Focus con anillo sutil.",
+      "html": "<input class=\"ds-input\" type=\"text\" placeholder=\"Nombre del producto\" />",
+      "css": ".ds-input { width: 100%; min-width: 0; height: 2rem; padding: 0.25rem 0.625rem; border: 1px solid #EDE6DE; border-radius: 0.625rem; background-color: transparent; color: #2A211E; font-family: 'DM Sans', ui-sans-serif, system-ui, sans-serif; font-size: 1rem; line-height: 1.5rem; transition: color 0.15s ease-in-out, border-color 0.15s ease-in-out; outline: none; } .ds-input::placeholder { color: #7D6F65; } .ds-input:focus-visible { border-color: rgba(125, 111, 101, 0.5); box-shadow: 0 0 0 3px rgba(125, 111, 101, 0.25); } @media (min-width: 768px) { .ds-input { font-size: 0.875rem; line-height: 1.25rem; } }"
+    },
+    {
+      "name": "Nav Item",
+      "kind": "nav",
+      "refersTo": "nav-item",
+      "description": "Item de navegación del dashboard sidebar. Estado activo con fondo café.",
+      "html": "<a href=\"#\" class=\"ds-nav-item active\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect width=\"7\" height=\"9\" x=\"3\" y=\"3\" rx=\"1\"/><rect width=\"7\" height=\"5\" x=\"14\" y=\"3\" rx=\"1\"/><rect width=\"7\" height=\"9\" x=\"14\" y=\"12\" rx=\"1\"/><rect width=\"7\" height=\"5\" x=\"3\" y=\"16\" rx=\"1\"/></svg>Dashboard</a>",
+      "css": ".ds-nav-item { display: flex; align-items: center; gap: 0.75rem; border-radius: 0.5rem; padding: 0.5rem 0.75rem; font-family: 'DM Sans', ui-sans-serif, system-ui, sans-serif; font-size: 0.875rem; font-weight: 500; line-height: 1.25rem; color: #7D6F65; text-decoration: none; transition: background-color 0.15s ease-in-out, color 0.15s ease-in-out; } .ds-nav-item:hover { background-color: rgba(237, 230, 222, 0.5); color: #2A211E; } .ds-nav-item.active { background-color: #2A211E; color: #FDF8F3; }"
+    },
+    {
+      "name": "Hero CTA",
+      "kind": "custom",
+      "refersTo": "hero-cta",
+      "description": "Banner de llamada a la acción en la landing. Fondo terracota, texto blanco, botón pill blanco.",
+      "html": "<section class=\"ds-hero-cta\"><h2>Listo para modernizar tu carta?</h2><p>Únete a cientos de negocios de comida en Perú que ya venden más con Mesa.pe.</p><button class=\"ds-hero-btn\">Crear carta gratis</button></section>",
+      "css": ".ds-hero-cta { position: relative; overflow: hidden; border-radius: 2rem; background-color: #C25E3A; padding: 5rem 2rem; text-align: center; color: #FFFFFF; } .ds-hero-cta h2 { font-family: 'Playfair Display', ui-serif, Georgia, serif; font-size: clamp(2rem, 4vw, 2.5rem); font-weight: 600; line-height: 1.2; letter-spacing: -0.01em; max-width: 42rem; margin: 0 auto; } .ds-hero-cta p { margin-top: 1.25rem; max-width: 32rem; margin-left: auto; margin-right: auto; font-family: 'DM Sans', ui-sans-serif, system-ui, sans-serif; font-size: 1.125rem; line-height: 1.75rem; color: rgba(255, 255, 255, 0.8); } .ds-hero-btn { display: inline-flex; align-items: center; justify-content: center; margin-top: 2.5rem; padding: 0.75rem 2rem; border-radius: 9999px; background-color: #FFFFFF; color: #C25E3A; font-family: 'DM Sans', ui-sans-serif, system-ui, sans-serif; font-size: 1rem; font-weight: 500; line-height: 1.5rem; transition: background-color 0.2s ease-in-out; cursor: pointer; border: none; } .ds-hero-btn:hover { background-color: #FDF8F3; }"
+    },
+    {
+      "name": "Phone Mock",
+      "kind": "custom",
+      "refersTo": "phone-mock",
+      "description": "Mock de celular del hero. Aspect-ratio 9/17, borde grueso café, notch simulado.",
+      "html": "<div class=\"ds-phone-mock\"><div class=\"ds-phone-notch\"></div><div class=\"ds-phone-content\"></div></div>",
+      "css": ".ds-phone-mock { position: relative; aspect-ratio: 9/17; width: 260px; overflow: hidden; border-radius: 2.25rem; border: 5px solid #2A211E; background-color: #FFFFFF; box-shadow: 0 25px 50px -12px rgba(42, 33, 30, 0.25); } .ds-phone-notch { position: absolute; top: 0; left: 50%; transform: translateX(-50%); z-index: 10; height: 1.25rem; width: 6rem; border-bottom-left-radius: 0.75rem; border-bottom-right-radius: 0.75rem; background-color: #2A211E; } .ds-phone-content { height: 100%; padding-top: 1.5rem; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "La Carta Artesanal",
+    "overview": "Un sistema visual que se siente como una carta de restaurante hecha a mano en papel artesanal. Tipografía editorial que da autoridad, colores cálidos que evocan adobe peruano y cerámica, y formas generosas que acogen al usuario. Rechaza la frialdad del SaaS corporativo y la saturación de las apps de delivery. La interfaz no compite con la comida; la enmarca. Cada superficie respira. La jerarquía tipográfica guía sin gritar. Los colores cálidos establecen confianza inmediata, como entrar a un local familiar en Lima.",
+    "keyCharacteristics": [
+      "Editorial tipográfica con serif display + sans body",
+      "Paleta cálida de terracota, crema y café; sin negros puros ni blancos puros",
+      "Formas redondeadas generosas (6px–22px), nunca afiladas",
+      "Elevación plana por defecto; sombras solo como respuesta a estado",
+      "Movimiento sutil con ease-out-quart, nunca elástico ni con rebote"
+    ],
+    "rules": [
+      { "name": "La Regla del Acento Escaso", "body": "El terracota ocupa ≤10% de cualquier pantalla. Su rareza es el punto. Nunca lo uses como fondo de sección completa; el hero CTA es la única excepción controlada.", "section": "colors" },
+      { "name": "La Regla de la Cursiva Reservada", "body": "La cursiva de Playfair Display se usa solo para énfasis dentro de display/headline, nunca en body ni en labels. Máximo una palabra por título.", "section": "typography" },
+      { "name": "La Regla de la Plancha", "body": "Las superficies están planas en reposo. Si una card tiene sombra sin que el usuario interactúe con ella, está mal.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do usar crema (#FDF8F3) como fondo de sección cálida y blanco (#FFFFFF) para cards flotantes.",
+      "Do mantener el terracota en ≤10% de la superficie visible por pantalla.",
+      "Do usar Playfair Display en cursiva para una sola palabra de énfasis en títulos de sección.",
+      "Do respetar 70ch máximo en bloques de texto body.",
+      "Do usar sombras solo en estado hover o superposición activa."
+    ],
+    "donts": [
+      "Don't usar gradientes azul-morado, ilustraciones de personas sonriendo en oficinas, o copy en inglés. PRODUCT.md prohíbe el look de SaaS corporativo genérico.",
+      "Don't usar bordes laterales gruesos como acento en cards o listas (side-stripe borders).",
+      "Don't usar texto con degradado (background-clip: text). Énfasis mediante peso o tamaño, nunca mediante gradiente.",
+      "Don't usar glassmorphism decorativo. Blur solo con propósito funcional (backdrop-blur en nav sticky).",
+      "Don't usar el template de hero-metric (número grande + label pequeño + stats + gradiente). PRODUCT.md rechaza los clichés de landing SaaS.",
+      "Don't usar grids de cards idénticas con icono + título + texto repetidos sin variación.",
+      "Don't abrir un modal como primera opción. Agota alternativas inline y progresivas primero."
+    ]
+  }
+}

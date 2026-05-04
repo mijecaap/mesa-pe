@@ -1,0 +1,13 @@
+import { Module } from '@nestjs/common';
+import { BusinessService } from './business.service';
+import { BusinessController } from './business.controller';
+import { DatabaseModule } from '../../database/database.module';
+import { FeatureFlagsService } from '../feature-flags.service';
+
+@Module({
+  imports: [DatabaseModule],
+  controllers: [BusinessController],
+  providers: [BusinessService, FeatureFlagsService],
+  exports: [BusinessService],
+})
+export class BusinessModule {}
