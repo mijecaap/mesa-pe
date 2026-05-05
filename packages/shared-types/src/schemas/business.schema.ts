@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { businessThemeSchema } from "./theme.schema.js";
 
 export const businessSlugSchema = z
   .string()
@@ -21,6 +22,7 @@ export const createBusinessSchema = z.object({
   currency: z.string().default("PEN"),
   isPublished: z.boolean().default(false),
   manualStatus: z.enum(["AUTO", "OPEN", "CLOSED"]).default("AUTO"),
+  theme: businessThemeSchema.optional(),
 });
 
 export const updateBusinessSchema = createBusinessSchema.partial();

@@ -24,13 +24,13 @@ export function PhotoGallery({ business }: PhotoGalleryProps) {
   if (uniqueImages.length === 0) return null;
 
   return (
-    <section className="border-t border-[#EDE6DE] bg-white py-10 sm:py-14">
+    <section className="border-t border-[var(--theme-border)] bg-[var(--theme-surface)] py-10 sm:py-14">
       <div className="mx-auto max-w-2xl px-4">
         <div className="mb-6">
-          <span className="text-xs font-medium uppercase tracking-[0.2em] text-[#C25E3A]">
+          <span className="text-xs font-medium uppercase tracking-[0.2em] text-[var(--theme-primary)]">
             Galería
           </span>
-          <h2 className="mt-2 font-[family-name:var(--font-display)] text-2xl font-semibold text-[#2A211E] sm:text-3xl">
+          <h2 className="mt-2 font-[family-name:var(--font-display)] text-2xl font-semibold text-[var(--theme-text)] sm:text-3xl">
             Un vistazo a {business.name}
           </h2>
         </div>
@@ -40,7 +40,7 @@ export function PhotoGallery({ business }: PhotoGalleryProps) {
             <button
               key={idx}
               onClick={() => setSelectedImage(url)}
-              className="relative aspect-square overflow-hidden rounded-xl bg-[#EDE6DE] transition-transform duration-300 hover:scale-[1.02]"
+              className="relative aspect-square overflow-hidden rounded-xl bg-[var(--theme-border)] transition-transform duration-300 hover:scale-[1.02]"
             >
               <Image
                 src={url}

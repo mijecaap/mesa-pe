@@ -13,7 +13,7 @@ export default function PublicLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex min-h-screen flex-col bg-[#FDF8F3] text-[#2A211E]">
+    <div className="flex min-h-screen flex-col">
       {children}
     </div>
   );

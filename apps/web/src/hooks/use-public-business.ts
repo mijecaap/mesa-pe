@@ -20,6 +20,14 @@ export interface PublicBusiness {
   isPublished: boolean;
   manualStatus: string;
   plan: string;
+  theme: {
+    preset: string;
+    primaryColor: string;
+    backgroundColor: string;
+    textColor: string;
+    accentColor: string;
+    fontFamily: string;
+  } | null;
   createdAt: string;
   updatedAt: string;
   isOpenNow: boolean;

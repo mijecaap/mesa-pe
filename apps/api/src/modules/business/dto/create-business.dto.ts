@@ -5,7 +5,28 @@ import {
   IsUrl,
   Length,
   Matches,
+  IsObject,
 } from 'class-validator';
+
+class BusinessThemeDto {
+  @IsString()
+  preset!: string;
+
+  @IsString()
+  primaryColor!: string;
+
+  @IsString()
+  backgroundColor!: string;
+
+  @IsString()
+  textColor!: string;
+
+  @IsString()
+  accentColor!: string;
+
+  @IsString()
+  fontFamily!: string;
+}
 
 export class CreateBusinessDto {
   @IsString()
@@ -68,6 +89,10 @@ export class CreateBusinessDto {
   @IsString()
   @IsOptional()
   manualStatus?: string = 'AUTO';
+
+  @IsObject()
+  @IsOptional()
+  theme?: BusinessThemeDto;
 }
 
 export class UpdateBusinessDto {
@@ -126,4 +151,8 @@ export class UpdateBusinessDto {
   @IsString()
   @IsOptional()
   manualStatus?: string;
+
+  @IsObject()
+  @IsOptional()
+  theme?: BusinessThemeDto;
 }

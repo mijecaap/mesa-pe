@@ -4,6 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { createClerkClient } from '@clerk/backend';
+import { Prisma } from '@prisma/client';
 import { PrismaService } from '../../database/prisma.service';
 import {
   CreateBusinessDto,
@@ -109,9 +110,19 @@ export class BusinessService {
 
     const user = await this.ensureUser(userId);
 
+    const defaultTheme = {
+      preset: 'terracotta',
+      primaryColor: '#C25E3A',
+      backgroundColor: '#FDF8F3',
+      textColor: '#2A211E',
+      accentColor: '#4A6B5D',
+      fontFamily: 'sans',
+    };
+
     return this.prisma.business.create({
       data: {
         ...dto,
+        theme: (dto.theme ?? defaultTheme) as unknown as Prisma.InputJsonValue,
         ownerId: user.id,
         organizationId: orgId || null,
       },
@@ -243,9 +254,15 @@ export class BusinessService {
   }
 
   async update(id: string, dto: UpdateBusinessDto) {
+    const data: Prisma.BusinessUpdateInput = {
+      ...dto,
+      theme: dto.theme
+        ? (dto.theme as unknown as Prisma.InputJsonValue)
+        : undefined,
+    };
     return this.prisma.business.update({
       where: { id },
-      data: dto,
+      data,
     });
   }
 

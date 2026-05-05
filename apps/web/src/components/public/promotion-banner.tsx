@@ -44,9 +44,9 @@ export function PromotionBanner({ promotions }: PromotionBannerProps) {
   if (!promotions || promotions.length === 0) return null;
 
   return (
-    <section className="bg-[#FDF8F3] pt-6 pb-2">
+    <section className="bg-[var(--theme-bg)] pt-6 pb-2">
       <div className="mx-auto max-w-2xl px-4">
-        <div className="relative overflow-hidden rounded-2xl bg-[#2A211E]">
+        <div className="relative overflow-hidden rounded-2xl bg-[var(--theme-inverse-bg)]">
           {/* Carousel container */}
           <div
             ref={scrollRef}
@@ -62,21 +62,21 @@ export function PromotionBanner({ promotions }: PromotionBannerProps) {
                 <div className="relative z-10 flex flex-col sm:flex-row">
                   {/* Text content */}
                   <div className="flex-1 p-5 sm:p-6">
-                    <div className="inline-flex items-center gap-1.5 rounded-full bg-[#C25E3A] px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-white">
+                    <div className="inline-flex items-center gap-1.5 rounded-full bg-[var(--theme-primary)] px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-white">
                       <Megaphone className="h-3 w-3" />
                       Promoción
                     </div>
-                    <h3 className="mt-3 text-lg font-semibold text-white sm:text-xl">
+                    <h3 className="mt-3 text-lg font-semibold text-[var(--theme-inverse-text)] sm:text-xl">
                       {promo.title}
                     </h3>
                     {promo.description && (
-                      <p className="mt-1.5 text-sm leading-relaxed text-white/70">
+                      <p className="mt-1.5 text-sm leading-relaxed text-[var(--theme-inverse-text-secondary)]">
                         {promo.description}
                       </p>
                     )}
 
                     {(promo.startDate || promo.endDate) && (
-                      <div className="mt-2 flex items-center gap-1 text-xs text-white/50">
+                      <div className="mt-2 flex items-center gap-1 text-xs text-[var(--theme-inverse-text-muted)]">
                         <Calendar className="h-3 w-3" />
                         <span>
                           {promo.startDate && promo.endDate
@@ -95,13 +95,13 @@ export function PromotionBanner({ promotions }: PromotionBannerProps) {
                             href={promo.ctaUrl}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-[#C25E3A] transition-colors hover:text-white"
+                            className="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-[var(--theme-primary)] transition-colors hover:text-[var(--theme-inverse-text)]"
                           >
                             {promo.buttonText || "Ver detalles"}{" "}
                             <ArrowRight className="h-4 w-4" />
                           </a>
                         ) : (
-                          <span className="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-[#C25E3A]">
+                          <span className="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-[var(--theme-primary)]">
                             {promo.buttonText}{" "}
                             <ArrowRight className="h-4 w-4" />
                           </span>
@@ -156,7 +156,7 @@ export function PromotionBanner({ promotions }: PromotionBannerProps) {
                     className={cn(
                       "h-1.5 rounded-full transition-all",
                       i === activeIndex
-                        ? "w-4 bg-[#C25E3A]"
+                        ? "w-4 bg-[var(--theme-primary)]"
                         : "w-1.5 bg-white/40 hover:bg-white/60",
                     )}
                     aria-label={`Ir a promoción ${i + 1}`}
@@ -167,8 +167,8 @@ export function PromotionBanner({ promotions }: PromotionBannerProps) {
           )}
 
           {/* Decorative elements */}
-          <div className="absolute -right-8 -top-8 h-32 w-32 rounded-full bg-[#C25E3A]/10" />
-          <div className="absolute -bottom-10 -left-10 h-40 w-40 rounded-full bg-[#C25E3A]/5" />
+          <div className="absolute -right-8 -top-8 h-32 w-32 rounded-full bg-[var(--theme-primary)]/10" />
+          <div className="absolute -bottom-10 -left-10 h-40 w-40 rounded-full bg-[var(--theme-primary)]/5" />
         </div>
       </div>
     </section>

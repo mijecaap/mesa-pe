@@ -34,14 +34,14 @@ export function ClosedOverlay({ openingHours, businessName }: ClosedOverlayProps
 
   if (dismissed) {
     return (
-      <div className="fixed inset-x-0 bottom-0 z-40 border-t border-[#C25E3A]/20 bg-[#2A211E]/90 px-4 py-2.5 backdrop-blur-md">
+      <div className="fixed inset-x-0 bottom-0 z-40 border-t border-[var(--theme-primary)]/20 bg-[var(--theme-inverse-bg)]/90 px-4 py-2.5 backdrop-blur-md">
         <div className="mx-auto flex max-w-2xl items-center justify-between gap-3">
           <div className="flex items-center gap-2">
-            <Moon className="h-4 w-4 shrink-0 text-[#C25E3A]" />
-            <p className="text-xs font-medium text-white/90">
+            <Moon className="h-4 w-4 shrink-0 text-[var(--theme-primary)]" />
+            <p className="text-xs font-medium text-[var(--theme-inverse-text)]/90">
               Cerrado ahora
               {nextOpen && (
-                <span className="text-[#7D6F65]">
+                <span className="text-[var(--theme-inverse-text-muted)]">
                   {" "}
                   · Abrimos {dayNames[nextOpen.dayOfWeek]} a las {nextOpen.openTime}
                 </span>
@@ -50,7 +50,7 @@ export function ClosedOverlay({ openingHours, businessName }: ClosedOverlayProps
           </div>
           <button
             onClick={() => setShowDetails(!showDetails)}
-            className="text-xs font-medium text-[#C25E3A] hover:underline"
+            className="text-xs font-medium text-[var(--theme-primary)] hover:underline"
           >
             Ver horarios
           </button>
@@ -63,10 +63,10 @@ export function ClosedOverlay({ openingHours, businessName }: ClosedOverlayProps
                 .sort((a, b) => a.dayOfWeek - b.dayOfWeek)
                 .map((h) => (
                   <div key={h.dayOfWeek} className="flex justify-between">
-                    <span className={h.dayOfWeek === today ? "text-white" : "text-[#7D6F65]"}>
+                    <span className={h.dayOfWeek === today ? "text-[var(--theme-inverse-text)]" : "text-[var(--theme-inverse-text-muted)]"}>
                       {dayNamesFull[h.dayOfWeek]}
                     </span>
-                    <span className={h.dayOfWeek === today ? "text-white font-medium" : "text-[#7D6F65]"}>
+                    <span className={h.dayOfWeek === today ? "text-[var(--theme-inverse-text)] font-medium" : "text-[var(--theme-inverse-text-muted)]"}>
                       {h.isClosed ? "Cerrado" : `${h.openTime} – ${h.closeTime}`}
                     </span>
                   </div>
@@ -80,32 +80,32 @@ export function ClosedOverlay({ openingHours, businessName }: ClosedOverlayProps
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-md animate-fade-in">
-      <div className="relative mx-4 max-w-sm w-full rounded-2xl bg-[#FDF8F3] p-6 shadow-2xl animate-scale-in">
+      <div className="relative mx-4 max-w-sm w-full rounded-2xl bg-[var(--theme-bg)] p-6 shadow-2xl animate-scale-in">
         <button
           onClick={handleDismiss}
-          className="absolute right-3 top-3 flex h-8 w-8 items-center justify-center rounded-full text-[#7D6F65] transition-colors hover:bg-[#EDE6DE]"
+          className="absolute right-3 top-3 flex h-8 w-8 items-center justify-center rounded-full text-[var(--theme-text-muted)] transition-colors hover:bg-[var(--theme-border)]"
         >
           <X className="h-4 w-4" />
         </button>
 
         <div className="flex flex-col items-center text-center">
-          <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-[#C25E3A]/10">
-            <Moon className="h-8 w-8 text-[#C25E3A]" />
+          <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-[var(--theme-primary)]/10">
+            <Moon className="h-8 w-8 text-[var(--theme-primary)]" />
           </div>
 
-          <h2 className="font-[family-name:var(--font-display)] text-xl font-semibold text-[#2A211E]">
+          <h2 className="font-[family-name:var(--font-display)] text-xl font-semibold text-[var(--theme-text)]">
             {businessName ? `${businessName} está cerrado` : "Estamos cerrados"}
           </h2>
-          <p className="mt-1.5 text-sm text-[#7D6F65]">
+          <p className="mt-1.5 text-sm text-[var(--theme-text-secondary)]">
             Agradecemos tu interés. Puedes explorar el menú y volver durante nuestro horario de atención.
           </p>
 
           {nextOpen && (
-            <div className="mt-5 flex items-center gap-2 rounded-lg bg-[#EDE6DE] px-4 py-3">
-              <Clock className="h-4 w-4 text-[#C25E3A]" />
+            <div className="mt-5 flex items-center gap-2 rounded-lg bg-[var(--theme-border)] px-4 py-3">
+              <Clock className="h-4 w-4 text-[var(--theme-primary)]" />
               <div className="text-left">
-                <p className="text-xs font-medium text-[#2A211E]">Próxima apertura</p>
-                <p className="text-xs text-[#7D6F65]">
+                <p className="text-xs font-medium text-[var(--theme-text)]">Próxima apertura</p>
+                <p className="text-xs text-[var(--theme-text-secondary)]">
                   {dayNamesFull[nextOpen.dayOfWeek]} a las {nextOpen.openTime}
                 </p>
               </div>
@@ -115,7 +115,7 @@ export function ClosedOverlay({ openingHours, businessName }: ClosedOverlayProps
           <button
             type="button"
             onClick={handleDismiss}
-            className="mt-5 w-full rounded-xl border border-[#EDE6DE] bg-white py-3 text-sm font-semibold text-[#2A211E] transition-all hover:bg-[#FDF8F3] active:scale-[0.98]"
+            className="mt-5 w-full rounded-xl border border-[var(--theme-border)] bg-[var(--theme-surface)] py-3 text-sm font-semibold text-[var(--theme-text)] transition-all hover:bg-[var(--theme-bg)] active:scale-[0.98]"
           >
             Ver menú igual
           </button>

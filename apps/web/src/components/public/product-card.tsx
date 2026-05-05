@@ -17,27 +17,27 @@ const tagConfig: Record<string, { icon: React.ReactNode; label: string; style: s
   nuevo: {
     icon: <Star className="h-3 w-3" />,
     label: "Nuevo",
-    style: "bg-[#2A211E] text-white",
+    style: "bg-[var(--theme-text)] text-white",
   },
   popular: {
     icon: <Flame className="h-3 w-3" />,
     label: "Popular",
-    style: "bg-[#C25E3A] text-white",
+    style: "bg-[var(--theme-primary)] text-white",
   },
   promo: {
     icon: <Tag className="h-3 w-3" />,
     label: "Promo",
-    style: "bg-[#4A6B5D] text-white",
+    style: "bg-[var(--theme-accent)] text-white",
   },
   vegetariano: {
     icon: <Leaf className="h-3 w-3" />,
     label: "Veggie",
-    style: "bg-[#4A6B5D]/90 text-white",
+    style: "bg-[var(--theme-accent)]/90 text-white",
   },
   picante: {
     icon: <Zap className="h-3 w-3" />,
     label: "Picante",
-    style: "bg-[#C25E3A]/90 text-white",
+    style: "bg-[var(--theme-primary)]/90 text-white",
   },
 };
 
@@ -71,7 +71,7 @@ export function ProductCard({ item, currency, onClick, isOpenNow = true, index =
       }}
     >
       {/* Image container */}
-      <div className="relative aspect-[4/3] w-full overflow-hidden rounded-xl bg-[#EDE6DE]">
+      <div className="relative aspect-[4/3] w-full overflow-hidden rounded-xl bg-[var(--theme-border)]">
         {item.imageUrl ? (
           <Image
             src={item.imageUrl}
@@ -101,8 +101,8 @@ export function ProductCard({ item, currency, onClick, isOpenNow = true, index =
 
         {/* Sold out overlay */}
         {!item.isAvailable && (
-          <div className="absolute inset-0 flex items-center justify-center bg-[#2A211E]/40 backdrop-blur-[2px]">
-            <span className="rounded-lg bg-white/95 px-4 py-2 text-sm font-medium italic tracking-wide text-[#2A211E]">
+          <div className="absolute inset-0 flex items-center justify-center bg-[var(--theme-text)]/40 backdrop-blur-[2px]">
+            <span className="rounded-lg bg-[var(--theme-surface)]/95 px-4 py-2 text-sm font-medium italic tracking-wide text-[var(--theme-text)]">
               Agotado
             </span>
           </div>
@@ -112,16 +112,16 @@ export function ProductCard({ item, currency, onClick, isOpenNow = true, index =
       {/* Content */}
       <div className="mt-2.5 px-0.5">
         <div className="flex items-start justify-between gap-2">
-          <h3 className="text-[15px] font-semibold leading-snug text-[#2A211E] text-pretty">
+          <h3 className="text-[15px] font-semibold leading-snug text-[var(--theme-text)] text-pretty">
             {item.name}
           </h3>
-          <span className="shrink-0 text-[15px] font-bold text-[#C25E3A]">
+          <span className="shrink-0 text-[15px] font-bold text-[var(--theme-primary)]">
             {formatPrice(item.basePrice)}
           </span>
         </div>
 
         {item.description && (
-          <p className="mt-1 line-clamp-2 text-[13px] leading-relaxed text-[#7D6F65]">
+          <p className="mt-1 line-clamp-2 text-[13px] leading-relaxed text-[var(--theme-text-secondary)]">
             {item.description}
           </p>
         )}
@@ -135,7 +135,7 @@ export function ProductCard({ item, currency, onClick, isOpenNow = true, index =
               return (
                 <span
                   key={tag}
-                  className="inline-flex items-center rounded-md bg-[#EDE6DE] px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide text-[#7D6F65]"
+                  className="inline-flex items-center rounded-md bg-[var(--theme-border)] px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide text-[var(--theme-text-muted)]"
                 >
                   {config.label}
                 </span>
@@ -151,7 +151,7 @@ export function ProductCard({ item, currency, onClick, isOpenNow = true, index =
 function ProductPlaceholder({ name }: { name: string }) {
   // Generate a warm, appetizing placeholder based on first letter
   const firstLetter = name.charAt(0).toUpperCase();
-  const hues = ["#C25E3A", "#A3492D", "#4A6B5D", "#7D6F65", "#C25E3A"];
+  const hues = ["var(--theme-primary)", "var(--theme-primary-hover)", "var(--theme-accent)", "var(--theme-text-muted)", "var(--theme-primary)"];
   const hue = hues[firstLetter.charCodeAt(0) % hues.length];
 
   return (
@@ -168,13 +168,13 @@ function ProductPlaceholder({ name }: { name: string }) {
       <div className="relative flex flex-col items-center gap-2">
         <div
           className="flex h-14 w-14 items-center justify-center rounded-2xl"
-          style={{ backgroundColor: `${hue}15` }}
+          style={{ backgroundColor: `color-mix(in srgb, ${hue} 15%, transparent)` }}
         >
-          <UtensilsCrossed className="h-6 w-6" style={{ color: `${hue}60` }} />
+          <UtensilsCrossed className="h-6 w-6" style={{ color: `color-mix(in srgb, ${hue} 60%, transparent)` }} />
         </div>
         <span
           className="text-xs font-medium uppercase tracking-widest"
-          style={{ color: `${hue}50` }}
+          style={{ color: `color-mix(in srgb, ${hue} 50%, transparent)` }}
         >
           {firstLetter}
         </span>

@@ -13,6 +13,7 @@ import { CartSheet } from "./cart-sheet";
 import { CheckoutModal } from "./checkout-modal";
 import { useCartStore } from "@/stores/cart-store";
 import { trackEvent } from "@/lib/analytics";
+import { getThemeVariables } from "@/lib/theme";
 import type { PublicBusiness } from "@/hooks/use-public-business";
 
 interface PublicPageClientProps {
@@ -27,6 +28,8 @@ export function PublicPageClient({ business }: PublicPageClientProps) {
   const [cartOpen, setCartOpen] = useState(false);
   const [checkoutOpen, setCheckoutOpen] = useState(false);
   const setBusinessId = useCartStore((s) => s.setBusinessId);
+
+  const vars = getThemeVariables(business.theme);
 
   useEffect(() => {
     setBusinessId(business.id);
@@ -49,7 +52,10 @@ export function PublicPageClient({ business }: PublicPageClientProps) {
   };
 
   return (
-    <>
+    <div
+      className="flex min-h-screen flex-col"
+      style={vars as unknown as React.CSSProperties}
+    >
       <main className="flex-1">
         <HeroSection business={business} isOpenNow={business.isOpenNow} />
         <PromotionBanner promotions={business.promotions} />
@@ -63,14 +69,14 @@ export function PublicPageClient({ business }: PublicPageClientProps) {
       </main>
 
       {business.plan === "FREE" && (
-        <footer className="border-t border-white/10 bg-[#1a1513] py-5 text-center">
-          <p className="text-xs text-[#7D6F65]">
+        <footer className="border-t border-white/10 bg-[var(--theme-inverse-bg)] py-5 text-center">
+          <p className="text-xs text-[var(--theme-inverse-text-muted)]">
             Carta digital creada con{" "}
             <a
               href="https://mesa.pe"
               target="_blank"
               rel="noopener noreferrer"
-              className="font-medium text-[#C25E3A] hover:underline"
+              className="font-medium text-[var(--theme-primary)] hover:underline"
             >
               Mesa.pe
             </a>
@@ -118,6 +124,6 @@ export function PublicPageClient({ business }: PublicPageClientProps) {
           businessName={business.name}
         />
       )}
-    </>
+    </div>
   );
 }

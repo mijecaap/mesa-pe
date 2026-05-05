@@ -282,7 +282,7 @@
 ### Fase 2: Beta Pagada
 
 - [x] Sistema de promociones (banners, destacados)
-- [ ] Plantillas visuales (temas)
+- [x] Plantillas visuales (temas)
 - [ ] Exportar QR en PDF
 - [ ] Mejor onboarding con tooltips
 - [ ] Sistema de planes y suscripciones manual
@@ -401,3 +401,14 @@
 - **Seed**: 8 promociones demo agregadas a los 5 negocios ficticios.
 - **Fixes de lint**: Arreglados errores preexistentes de `react-hooks/rules-of-hooks` y `react-hooks/set-state-in-effect` en `closed-overlay.tsx` y `use-onboarding.ts`.
 - Builds y lint pasan en ambos proyectos.
+
+### 2026-05-05 (Post-MVP — Plantillas Visuales / Temas)
+- **Schema Prisma**: Agregado campo `theme Json?` al modelo `Business`. Sincronizado en Neon PostgreSQL con `prisma db push`.
+- **Shared types**: Nuevo `theme.schema.ts` con `businessThemeSchema`, `themePresetSchema`, `fontFamilySchema`. Exportado desde `@mesa/shared-types`. Actualizado `business.schema.ts` para incluir `theme` opcional en `createBusinessSchema` y `updateBusinessSchema`.
+- **Backend**: Actualizado `CreateBusinessDto` / `UpdateBusinessDto` con `BusinessThemeDto`. `BusinessService.create()` ahora asigna un tema default (`terracotta`) si no se envía uno. `BusinessService.update()` castea `theme` a `Prisma.InputJsonValue`. `findPublicBySlug` ahora devuelve `theme` en el payload público.
+- **Frontend — Sistema de temas**: Nuevo `lib/theme.ts` con helpers de color (hexToRgb, mixColors, isDarkColor), `generateThemeVariables()` que produce 12 variables CSS derivadas, y 4 paletas predefinidas (`terracotta`, `ocean`, `forest`, `midnight`).
+- **Frontend — Refactor CSS Variables**: Todos los componentes públicos (`hero-section`, `product-card`, `category-nav`, `product-list`, `promotion-banner`, `business-info`, `cart-button`, `cart-sheet`, `product-modal`, `checkout-modal`, `closed-overlay`, `open-status-badge`, `photo-gallery`, `floating-whatsapp`) refactorizados para usar variables CSS (`--theme-primary`, `--theme-bg`, `--theme-text`, `--theme-accent`, etc.) en lugar de hex codes hardcodeados.
+- **Frontend — Layout público**: `layout.tsx` limpiado de colores hardcodeados. `public-page-wrapper.tsx` y `public-page-client.tsx` ahora inyectan las variables CSS del tema activo via inline `style`. El tipo `PublicBusiness` incluye `theme`.
+- **Dashboard — Página de Diseño**: Nueva ruta `/dashboard/design` con selector de 4 temas predefinidos (cards con preview visual), sección de colores personalizados (4 color pickers con inputs hex), selector de tipografía (Sans/Serif/Mono), preview en vivo con mockup de la carta, y botón "Guardar cambios" conectado a `useUpdateBusiness`. Usa patrón `DesignEditor` con `key={business.id}` para evitar `setState` en effects.
+- **Dashboard — Sidebar**: Agregado item "Diseño" con icono `Palette` entre "Promociones" y "Código QR".
+- **Builds y lint**: Builds pasan en `web` y `api`. Lint sin errores nuevos (solo warnings preexistentes de otras páginas).

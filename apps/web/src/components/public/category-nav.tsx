@@ -43,7 +43,7 @@ export function CategoryNav({ categories, activeCategory, onSelect }: CategoryNa
   };
 
   return (
-    <nav className="sticky top-0 z-30 border-b border-[#EDE6DE] bg-[#FDF8F3]/95 backdrop-blur-sm">
+    <nav className="sticky top-0 z-30 border-b border-[var(--theme-border)] bg-[var(--theme-bg)]/95 backdrop-blur-sm">
       <div className="mx-auto max-w-2xl px-4">
         <div
           ref={navRef}
@@ -51,7 +51,7 @@ export function CategoryNav({ categories, activeCategory, onSelect }: CategoryNa
         >
           {/* Sliding indicator */}
           <div
-            className="absolute bottom-2 h-0.5 rounded-full bg-[#C25E3A] transition-all duration-300 ease-out"
+            className="absolute bottom-2 h-0.5 rounded-full bg-[var(--theme-primary)] transition-all duration-300 ease-out"
             style={{
               left: indicatorStyle.left,
               width: indicatorStyle.width,
@@ -66,8 +66,8 @@ export function CategoryNav({ categories, activeCategory, onSelect }: CategoryNa
             className={cn(
               "relative shrink-0 px-4 py-2 text-sm font-medium transition-colors duration-200",
               activeCategory === null
-                ? "text-[#2A211E]"
-                : "text-[#7D6F65] hover:text-[#2A211E]"
+                ? "text-[var(--theme-text)]"
+                : "text-[var(--theme-text-muted)] hover:text-[var(--theme-text)]"
             )}
           >
             Todo
@@ -83,8 +83,8 @@ export function CategoryNav({ categories, activeCategory, onSelect }: CategoryNa
               className={cn(
                 "relative shrink-0 px-4 py-2 text-sm font-medium transition-colors duration-200",
                 activeCategory === cat.id
-                  ? "text-[#2A211E]"
-                  : "text-[#7D6F65] hover:text-[#2A211E]"
+                  ? "text-[var(--theme-text)]"
+                  : "text-[var(--theme-text-muted)] hover:text-[var(--theme-text)]"
               )}
             >
               {cat.name}

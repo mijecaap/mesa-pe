@@ -1,5 +1,6 @@
 export * from "./enums.js";
 export * from "./schemas/business.schema.js";
+export * from "./schemas/theme.schema.js";
 export * from "./schemas/opening-hour.schema.js";
 export * from "./schemas/menu-category.schema.js";
 export * from "./schemas/menu-item.schema.js";

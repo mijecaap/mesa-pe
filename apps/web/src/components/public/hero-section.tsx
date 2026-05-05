@@ -25,7 +25,7 @@ export function HeroSection({ business, isOpenNow = true }: HeroSectionProps) {
             priority
             sizes="100vw"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#2A211E]/80 via-[#2A211E]/20 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[var(--theme-text)]/80 via-[var(--theme-text)]/20 to-transparent" />
         </div>
 
         {/* Overlapping content */}
@@ -44,13 +44,13 @@ export function HeroSection({ business, isOpenNow = true }: HeroSectionProps) {
 
   // Compact hero when no banner — no giant black block
   return (
-    <section className="relative bg-[#FDF8F3] pt-10 pb-6 sm:pt-14 sm:pb-8">
+    <section className="relative bg-[var(--theme-bg)] pt-10 pb-6 sm:pt-14 sm:pb-8">
       {/* Subtle decorative shapes */}
       <div className="absolute right-0 top-0 h-64 w-64 opacity-[0.03]" style={{
-        background: "radial-gradient(circle at 70% 30%, #C25E3A 0%, transparent 70%)"
+        background: "radial-gradient(circle at 70% 30%, var(--theme-primary) 0%, transparent 70%)"
       }} />
       <div className="absolute left-0 bottom-0 h-48 w-48 opacity-[0.02]" style={{
-        background: "radial-gradient(circle at 30% 70%, #C25E3A 0%, transparent 70%)"
+        background: "radial-gradient(circle at 30% 70%, var(--theme-primary) 0%, transparent 70%)"
       }} />
 
       <div className="relative mx-auto max-w-2xl px-4">
@@ -74,7 +74,7 @@ function Logo({ business, large = false }: { business: PublicBusiness; large?: b
   if (business.logoUrl) {
     return (
       <div
-        className={`relative ${sizeClass} shrink-0 overflow-hidden rounded-2xl border-4 border-[#FDF8F3] bg-white shadow-lg`}
+        className={`relative ${sizeClass} shrink-0 overflow-hidden rounded-2xl border-4 border-[var(--theme-bg)] bg-white shadow-lg`}
       >
         <Image
           src={business.logoUrl}
@@ -89,7 +89,7 @@ function Logo({ business, large = false }: { business: PublicBusiness; large?: b
 
   return (
     <div
-      className={`flex ${sizeClass} shrink-0 items-center justify-center rounded-2xl border-4 border-[#FDF8F3] bg-[#C25E3A] text-2xl font-bold text-white shadow-lg`}
+      className={`flex ${sizeClass} shrink-0 items-center justify-center rounded-2xl border-4 border-[var(--theme-bg)] bg-[var(--theme-primary)] text-2xl font-bold text-white shadow-lg`}
     >
       {business.name.charAt(0).toUpperCase()}
     </div>
@@ -101,8 +101,8 @@ function StatusBadge({ isOpenNow }: { isOpenNow: boolean }) {
     <span
       className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium uppercase tracking-wider ${
         isOpenNow
-          ? "bg-[#4A6B5D] text-white"
-          : "bg-[#C25E3A] text-white"
+          ? "bg-[var(--theme-accent)] text-white"
+          : "bg-[var(--theme-primary)] text-white"
       }`}
     >
       <span className="relative flex h-2 w-2">
@@ -125,26 +125,26 @@ function StatusBadge({ isOpenNow }: { isOpenNow: boolean }) {
 function BusinessMeta({ business, isOpenNow }: { business: PublicBusiness; isOpenNow: boolean }) {
   return (
     <>
-      <h1 className="mt-4 font-[family-name:var(--font-display)] text-3xl font-semibold leading-tight tracking-tight text-[#2A211E] sm:text-4xl text-balance">
+      <h1 className="mt-4 font-[family-name:var(--font-display)] text-3xl font-semibold leading-tight tracking-tight text-[var(--theme-text)] sm:text-4xl text-balance">
         {business.name}
       </h1>
 
       {business.description && (
-        <p className="mt-2 max-w-lg text-base leading-relaxed text-[#7D6F65] text-pretty">
+        <p className="mt-2 max-w-lg text-base leading-relaxed text-[var(--theme-text-secondary)] text-pretty">
           {business.description}
         </p>
       )}
 
-      <div className="mt-3 flex flex-wrap items-center gap-4 text-sm text-[#7D6F65]">
+      <div className="mt-3 flex flex-wrap items-center gap-4 text-sm text-[var(--theme-text-secondary)]">
         {business.address && (
           <div className="flex items-center gap-1.5">
-            <MapPin className="h-4 w-4 text-[#C25E3A]" />
+            <MapPin className="h-4 w-4 text-[var(--theme-primary)]" />
             <span className="line-clamp-1">{business.address}</span>
           </div>
         )}
         {business.whatsappNumber && (
           <div className="flex items-center gap-1.5">
-            <Clock className="h-4 w-4 text-[#C25E3A]" />
+            <Clock className="h-4 w-4 text-[var(--theme-primary)]" />
             <span>Pedidos por WhatsApp</span>
           </div>
         )}

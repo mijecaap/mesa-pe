@@ -164,7 +164,7 @@ export function ProductModal({
 
       {/* Modal */}
       <div
-        className={`relative w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-t-2xl sm:rounded-2xl bg-[#FDF8F3] shadow-2xl transition-all duration-300 ${
+        className={`relative w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-t-2xl sm:rounded-2xl bg-[var(--theme-bg)] shadow-2xl transition-all duration-300 ${
           open ? "translate-y-0 opacity-100" : "translate-y-full sm:translate-y-8 opacity-0"
         }`}
       >
@@ -186,11 +186,11 @@ export function ProductModal({
               className="object-cover"
               sizes="(max-width: 768px) 100vw, 512px"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#FDF8F3] via-transparent to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-t from-[var(--theme-bg)] via-transparent to-transparent" />
           </div>
         ) : (
-          <div className="flex h-40 w-full items-center justify-center bg-[#EDE6DE]">
-            <span className="text-4xl font-semibold text-[#C25E3A]/20">
+          <div className="flex h-40 w-full items-center justify-center bg-[var(--theme-border)]">
+            <span className="text-4xl font-semibold text-[var(--theme-primary)]/20">
               {item.name.charAt(0).toUpperCase()}
             </span>
           </div>
@@ -199,15 +199,15 @@ export function ProductModal({
         <div className="px-5 pb-6 sm:px-6">
           {/* Header */}
           <div className="-mt-6 relative">
-            <h2 className="font-[family-name:var(--font-display)] text-2xl font-semibold text-[#2A211E] text-balance">
+            <h2 className="font-[family-name:var(--font-display)] text-2xl font-semibold text-[var(--theme-text)] text-balance">
               {item.name}
             </h2>
             {item.description && (
-              <p className="mt-1.5 text-sm leading-relaxed text-[#7D6F65] text-pretty">
+              <p className="mt-1.5 text-sm leading-relaxed text-[var(--theme-text-secondary)] text-pretty">
                 {item.description}
               </p>
             )}
-            <p className="mt-3 text-xl font-bold text-[#C25E3A]">
+            <p className="mt-3 text-xl font-bold text-[var(--theme-primary)]">
               {formatPrice(parseFloat(item.basePrice))}
             </p>
           </div>
@@ -218,11 +218,11 @@ export function ProductModal({
               {item.modifiers.map((mod) => (
                 <div key={mod.id}>
                   <div className="mb-3 flex items-center gap-2">
-                    <h4 className="text-sm font-semibold text-[#2A211E]">
+                    <h4 className="text-sm font-semibold text-[var(--theme-text)]">
                       {mod.name}
                     </h4>
                     {mod.isRequired && (
-                      <span className="rounded-full bg-[#C25E3A]/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-[#C25E3A]">
+                      <span className="rounded-full bg-[var(--theme-primary)]/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-[var(--theme-primary)]">
                         Obligatorio
                       </span>
                     )}
@@ -248,26 +248,26 @@ export function ProductModal({
                           disabled={!opt.isAvailable}
                           className={`flex w-full items-center gap-3 rounded-xl border p-3.5 text-left transition-all duration-200 ${
                             !opt.isAvailable
-                              ? "cursor-not-allowed opacity-40 border-[#EDE6DE]"
+                              ? "cursor-not-allowed opacity-40 border-[var(--theme-border)]"
                               : isSelected
-                              ? "cursor-pointer border-[#C25E3A] bg-[#C25E3A]/5"
-                              : "cursor-pointer border-[#EDE6DE] hover:border-[#C25E3A]/30"
+                              ? "cursor-pointer border-[var(--theme-primary)] bg-[var(--theme-primary)]/5"
+                              : "cursor-pointer border-[var(--theme-border)] hover:border-[var(--theme-primary)]/30"
                           }`}
                         >
                           <div
                             className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 transition-colors ${
                               isSelected
-                                ? "border-[#C25E3A] bg-[#C25E3A]"
-                                : "border-[#EDE6DE]"
+                                ? "border-[var(--theme-primary)] bg-[var(--theme-primary)]"
+                                : "border-[var(--theme-border)]"
                             }`}
                           >
                             {isSelected && <Check className="h-3 w-3 text-white" />}
                           </div>
-                          <span className="flex-1 text-sm text-[#2A211E]">
+                          <span className="flex-1 text-sm text-[var(--theme-text)]">
                             {opt.name}
                           </span>
                           {parseFloat(opt.priceDelta) > 0 && (
-                            <span className="text-xs text-[#7D6F65]">
+                            <span className="text-xs text-[var(--theme-text-secondary)]">
                               +{formatPrice(parseFloat(opt.priceDelta))}
                             </span>
                           )}
@@ -283,21 +283,21 @@ export function ProductModal({
           {/* Quantity + Add to cart */}
           <div className="mt-8 flex items-center gap-4">
             {/* Quantity selector */}
-            <div className="flex items-center rounded-xl border border-[#EDE6DE] bg-white">
+            <div className="flex items-center rounded-xl border border-[var(--theme-border)] bg-[var(--theme-surface)]">
               <button
                 type="button"
                 onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                className="flex h-11 w-11 items-center justify-center text-[#2A211E] transition-colors hover:bg-[#FDF8F3]"
+                className="flex h-11 w-11 items-center justify-center text-[var(--theme-text)] transition-colors hover:bg-[var(--theme-bg)]"
               >
                 <Minus className="h-4 w-4" />
               </button>
-              <span className="flex h-11 w-10 items-center justify-center text-sm font-semibold text-[#2A211E]">
+              <span className="flex h-11 w-10 items-center justify-center text-sm font-semibold text-[var(--theme-text)]">
                 {quantity}
               </span>
               <button
                 type="button"
                 onClick={() => setQuantity(quantity + 1)}
-                className="flex h-11 w-11 items-center justify-center text-[#2A211E] transition-colors hover:bg-[#FDF8F3]"
+                className="flex h-11 w-11 items-center justify-center text-[var(--theme-text)] transition-colors hover:bg-[var(--theme-bg)]"
               >
                 <Plus className="h-4 w-4" />
               </button>
@@ -310,8 +310,8 @@ export function ProductModal({
               onClick={handleAddToCart}
               className={`flex flex-1 items-center justify-center gap-2 rounded-xl py-3 text-sm font-semibold text-white transition-all duration-200 ${
                 !allRequiredSelected || !isOpenNow
-                  ? "cursor-not-allowed bg-[#7D6F65]/50"
-                  : "bg-[#C25E3A] hover:bg-[#A3492D] active:scale-[0.98]"
+                  ? "cursor-not-allowed bg-[var(--theme-text-muted)]/50"
+                  : "bg-[var(--theme-primary)] hover:bg-[var(--theme-primary-hover)] active:scale-[0.98]"
               }`}
             >
               {isOpenNow

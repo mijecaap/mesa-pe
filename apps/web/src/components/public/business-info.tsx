@@ -26,14 +26,14 @@ export function BusinessInfo({ business }: BusinessInfoProps) {
   const todayHours = sortedHours.find((h) => h.dayOfWeek === today);
 
   return (
-    <section className="border-t border-[#EDE6DE] bg-[#2A211E] py-16 sm:py-20">
+    <section className="border-t border-[var(--theme-border)] bg-[var(--theme-inverse-bg)] py-16 sm:py-20">
       <div className="mx-auto max-w-2xl px-4">
         {/* Header */}
         <div className="mb-12">
-          <span className="text-xs font-medium uppercase tracking-[0.2em] text-[#C25E3A]">
+          <span className="text-xs font-medium uppercase tracking-[0.2em] text-[var(--theme-primary)]">
             Información
           </span>
-          <h2 className="mt-3 font-[family-name:var(--font-display)] text-2xl font-semibold text-white sm:text-3xl text-balance">
+          <h2 className="mt-3 font-[family-name:var(--font-display)] text-2xl font-semibold text-[var(--theme-inverse-text)] sm:text-3xl text-balance">
             Todo lo que necesitas saber
           </h2>
         </div>
@@ -43,11 +43,11 @@ export function BusinessInfo({ business }: BusinessInfoProps) {
           {business.address && (
             <div className="flex items-start gap-3">
               <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/10">
-                <MapPin className="h-5 w-5 text-[#C25E3A]" />
+                <MapPin className="h-5 w-5 text-[var(--theme-primary)]" />
               </div>
               <div>
-                <h3 className="text-sm font-semibold text-white">Dirección</h3>
-                <p className="mt-1.5 text-sm leading-relaxed text-[#9C9189]">
+                <h3 className="text-sm font-semibold text-[var(--theme-inverse-text)]">Dirección</h3>
+                <p className="mt-1.5 text-sm leading-relaxed text-[var(--theme-inverse-text-secondary)]">
                   {business.address}
                 </p>
                 {business.googleMapsUrl && (
@@ -55,7 +55,7 @@ export function BusinessInfo({ business }: BusinessInfoProps) {
                     href={business.googleMapsUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="mt-2 inline-block text-xs font-medium text-[#C25E3A] hover:underline"
+                    className="mt-2 inline-block text-xs font-medium text-[var(--theme-primary)] hover:underline"
                   >
                     Ver en Google Maps
                   </a>
@@ -67,17 +67,17 @@ export function BusinessInfo({ business }: BusinessInfoProps) {
           {/* Hours */}
           <div className="flex items-start gap-3">
             <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/10">
-              <Clock className="h-5 w-5 text-[#C25E3A]" />
+              <Clock className="h-5 w-5 text-[var(--theme-primary)]" />
             </div>
             <div className="flex-1">
-              <h3 className="text-sm font-semibold text-white">Horarios</h3>
+              <h3 className="text-sm font-semibold text-[var(--theme-inverse-text)]">Horarios</h3>
               {todayHours && (
-                <p className="mt-1.5 text-sm text-[#9C9189]">
+                <p className="mt-1.5 text-sm text-[var(--theme-inverse-text-secondary)]">
                   Hoy:{" "}
                   {todayHours.isClosed ? (
-                    <span className="text-[#C25E3A]">Cerrado</span>
+                    <span className="text-[var(--theme-primary)]">Cerrado</span>
                   ) : (
-                    <span className="text-white font-medium">
+                    <span className="text-[var(--theme-inverse-text)] font-medium">
                       {todayHours.openTime} – {todayHours.closeTime}
                     </span>
                   )}
@@ -88,13 +88,13 @@ export function BusinessInfo({ business }: BusinessInfoProps) {
                   <div
                     key={h.dayOfWeek}
                     className={`flex justify-between text-sm ${
-                      h.dayOfWeek === today ? "text-white" : "text-[#7D6F65]"
+                      h.dayOfWeek === today ? "text-[var(--theme-inverse-text)]" : "text-[var(--theme-inverse-text-muted)]"
                     }`}
                   >
                     <span className={h.dayOfWeek === today ? "font-medium" : ""}>
                       {dayNames[h.dayOfWeek]}
                     </span>
-                    <span className={h.dayOfWeek === today ? "font-medium text-white" : ""}>
+                    <span className={h.dayOfWeek === today ? "font-medium text-[var(--theme-inverse-text)]" : ""}>
                       {h.isClosed ? "Cerrado" : `${h.openTime} – ${h.closeTime}`}
                     </span>
                   </div>
@@ -107,15 +107,15 @@ export function BusinessInfo({ business }: BusinessInfoProps) {
           {business.paymentMethods.length > 0 && (
             <div className="flex items-start gap-3">
               <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/10">
-                <CreditCard className="h-5 w-5 text-[#C25E3A]" />
+                <CreditCard className="h-5 w-5 text-[var(--theme-primary)]" />
               </div>
               <div>
-                <h3 className="text-sm font-semibold text-white">Pagos</h3>
+                <h3 className="text-sm font-semibold text-[var(--theme-inverse-text)]">Pagos</h3>
                 <div className="mt-2.5 flex flex-wrap gap-2">
                   {business.paymentMethods.map((pm) => (
                     <span
                       key={pm.id}
-                      className="inline-flex items-center rounded-lg bg-white/10 px-3 py-1.5 text-xs font-medium text-white"
+                      className="inline-flex items-center rounded-lg bg-white/10 px-3 py-1.5 text-xs font-medium text-[var(--theme-inverse-text)]"
                     >
                       {pm.name}
                     </span>
@@ -129,18 +129,18 @@ export function BusinessInfo({ business }: BusinessInfoProps) {
           {business.whatsappNumber && (
             <div className="flex items-start gap-3">
               <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/10">
-                <Phone className="h-5 w-5 text-[#C25E3A]" />
+                <Phone className="h-5 w-5 text-[var(--theme-primary)]" />
               </div>
               <div>
-                <h3 className="text-sm font-semibold text-white">Contacto</h3>
-                <p className="mt-1.5 text-sm text-[#9C9189]">
+                <h3 className="text-sm font-semibold text-[var(--theme-inverse-text)]">Contacto</h3>
+                <p className="mt-1.5 text-sm text-[var(--theme-inverse-text-secondary)]">
                   Pedidos por WhatsApp
                 </p>
                 <a
                   href={`https://wa.me/${business.whatsappNumber.replace(/\D/g, "")}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="mt-2 inline-flex items-center gap-1.5 text-xs font-medium text-[#C25E3A] hover:underline"
+                  className="mt-2 inline-flex items-center gap-1.5 text-xs font-medium text-[var(--theme-primary)] hover:underline"
                 >
                   Escribir ahora
                 </a>

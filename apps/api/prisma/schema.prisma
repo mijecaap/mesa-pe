@@ -47,6 +47,7 @@ model Business {
   isPublished     Boolean  @default(false)
   manualStatus    String   @default("AUTO")
   plan            String   @default("FREE")
+  theme           Json?
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 

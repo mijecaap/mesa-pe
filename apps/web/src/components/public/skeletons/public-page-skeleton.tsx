@@ -2,7 +2,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 export function PublicPageSkeleton() {
   return (
-    <div className="min-h-screen bg-[#FDF8F3]">
+    <div className="min-h-screen bg-[var(--theme-bg)]">
       {/* Hero skeleton */}
       <div className="relative">
         <Skeleton className="h-[45vh] min-h-[320px] w-full" />
@@ -23,12 +23,12 @@ export function PublicPageSkeleton() {
       </div>
 
       {/* Search & nav skeleton */}
-      <div className="sticky top-0 z-20 border-b border-[#EDE6DE] bg-[#FDF8F3]/95 backdrop-blur-sm">
+      <div className="sticky top-0 z-20 border-b border-[var(--theme-border)] bg-[var(--theme-bg)]/95 backdrop-blur-sm">
         <div className="mx-auto max-w-2xl px-4 py-3">
           <Skeleton className="h-10 w-full rounded-xl" />
         </div>
       </div>
-      <div className="border-b border-[#EDE6DE] bg-[#FDF8F3]/95 backdrop-blur-sm">
+      <div className="border-b border-[var(--theme-border)] bg-[var(--theme-bg)]/95 backdrop-blur-sm">
         <div className="mx-auto max-w-2xl px-4 py-3">
           <div className="flex gap-2">
             <Skeleton className="h-9 w-16 rounded-full" />
@@ -44,7 +44,7 @@ export function PublicPageSkeleton() {
         {Array.from({ length: 2 }).map((_, catIdx) => (
           <div
             key={catIdx}
-            className={`py-10 sm:py-14 ${catIdx % 2 === 0 ? "bg-[#FDF8F3]" : "bg-white"}`}
+            className={`py-10 sm:py-14 ${catIdx % 2 === 0 ? "bg-[var(--theme-bg)]" : "bg-[var(--theme-surface)]"}`}
           >
             <div className="mx-auto max-w-2xl px-4">
               <Skeleton className="h-8 w-48" />

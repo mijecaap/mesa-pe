@@ -43,21 +43,21 @@ export function ProductList({ business, onProductClick, isOpenNow = true }: Prod
   return (
     <div className="relative">
       {/* Search bar */}
-      <div className="sticky top-0 z-20 border-b border-[#EDE6DE] bg-[#FDF8F3]/95 backdrop-blur-sm">
+      <div className="sticky top-0 z-20 border-b border-[var(--theme-border)] bg-[var(--theme-bg)]/95 backdrop-blur-sm">
         <div className="mx-auto max-w-2xl px-4 py-3">
           <div className="relative">
-            <Search className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[#7D6F65]" />
+            <Search className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--theme-text-muted)]" />
             <input
               type="text"
               placeholder="Buscar en el menú..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full rounded-xl border border-[#EDE6DE] bg-white py-2.5 pl-10 pr-10 text-sm text-[#2A211E] placeholder:text-[#7D6F65]/60 focus:border-[#C25E3A]/50 focus:outline-none focus:ring-2 focus:ring-[#C25E3A]/20 transition-all"
+              className="w-full rounded-xl border border-[var(--theme-border)] bg-[var(--theme-surface)] py-2.5 pl-10 pr-10 text-sm text-[var(--theme-text)] placeholder:text-[var(--theme-text-muted)] focus:border-[var(--theme-primary)]/50 focus:outline-none focus:ring-2 focus:ring-[var(--theme-primary)]/20 transition-all"
             />
             {search && (
               <button
                 onClick={() => setSearch("")}
-                className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full p-0.5 text-[#7D6F65] transition-colors hover:bg-[#EDE6DE] hover:text-[#2A211E]"
+                className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full p-0.5 text-[var(--theme-text-muted)] transition-colors hover:bg-[var(--theme-border)] hover:text-[var(--theme-text)]"
               >
                 <X className="h-4 w-4" />
               </button>
@@ -76,9 +76,9 @@ export function ProductList({ business, onProductClick, isOpenNow = true }: Prod
       <div className="space-y-0">
         {filteredCategories.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-20 px-4">
-            <Search className="h-10 w-10 text-[#EDE6DE] mb-3" />
-            <p className="text-base font-medium text-[#2A211E]">No encontramos productos</p>
-            <p className="mt-1 text-sm text-[#7D6F65]">Prueba con otra búsqueda</p>
+            <Search className="h-10 w-10 text-[var(--theme-border)] mb-3" />
+            <p className="text-base font-medium text-[var(--theme-text)]">No encontramos productos</p>
+            <p className="mt-1 text-sm text-[var(--theme-text-secondary)]">Prueba con otra búsqueda</p>
           </div>
         ) : (
           filteredCategories.map((category, catIdx) => {
@@ -88,21 +88,21 @@ export function ProductList({ business, onProductClick, isOpenNow = true }: Prod
                 key={category.id}
                 id={`cat-${category.id}`}
                 className={`py-12 sm:py-16 ${
-                  isEven ? "bg-[#FDF8F3]" : "bg-white"
+                  isEven ? "bg-[var(--theme-bg)]" : "bg-[var(--theme-surface)]"
                 }`}
               >
                 <div className="mx-auto max-w-2xl px-4">
                   {/* Category header */}
                   <div className="mb-8 sm:mb-10">
-                    <h2 className="font-[family-name:var(--font-display)] text-2xl font-semibold leading-tight tracking-tight text-[#2A211E] sm:text-3xl text-balance">
+                    <h2 className="font-[family-name:var(--font-display)] text-2xl font-semibold leading-tight tracking-tight text-[var(--theme-text)] sm:text-3xl text-balance">
                       {category.name}
                     </h2>
                     {category.description && (
-                      <p className="mt-2 max-w-md text-sm leading-relaxed text-[#7D6F65] text-pretty">
+                      <p className="mt-2 max-w-md text-sm leading-relaxed text-[var(--theme-text-secondary)] text-pretty">
                         {category.description}
                       </p>
                     )}
-                    <div className="mt-5 h-px w-16 bg-[#C25E3A]" />
+                    <div className="mt-5 h-px w-16 bg-[var(--theme-primary)]" />
                   </div>
 
                   {/* Product grid */}
