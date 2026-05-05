@@ -15,23 +15,27 @@ export default function EditProductPage() {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center py-12">
-        <Loader2 className="h-8 w-8 animate-spin" />
+      <div className="flex items-center justify-center py-16">
+        <Loader2 className="h-8 w-8 animate-spin text-terracotta" />
       </div>
     );
   }
 
   if (!product) {
     return (
-      <div className="text-center py-12">
-        <p className="text-muted-foreground">Producto no encontrado</p>
+      <div className="flex flex-col items-center gap-3 py-16 text-center">
+        <p className="text-lg font-semibold text-coffee">Producto no encontrado</p>
+        <p className="text-sm text-warm-gray">El producto que buscas no existe o fue eliminado.</p>
       </div>
     );
   }
 
   return (
-    <div className="max-w-3xl space-y-6">
-      <h1 className="text-2xl font-bold">Editar producto</h1>
+    <div className="max-w-3xl mx-auto space-y-6">
+      <div>
+        <h1 className="font-heading text-2xl font-bold text-coffee">Editar producto</h1>
+        <p className="mt-1 text-sm text-warm-gray">Actualiza la información de {product.name}.</p>
+      </div>
       <ProductForm initialData={product} />
     </div>
   );

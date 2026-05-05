@@ -19,18 +19,11 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { GripVertical, Pencil, Trash2, Plus, Loader2 } from "lucide-react";
+import { GripVertical, Pencil, Trash2, Plus, Loader2, Tag, ArrowRight, Check, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
 import {
   useCategories,
   useCreateCategory,
@@ -39,6 +32,7 @@ import {
   useReorderCategories,
 } from "@/hooks/use-categories";
 import { useDashboardStore } from "@/stores/dashboard";
+import Link from "next/link";
 
 interface Category {
   id: string;
@@ -50,12 +44,24 @@ interface Category {
 
 function SortableCategoryItem({
   category,
-  onEdit,
+  onToggleVisible,
+  onEditClick,
   onDelete,
+  isEditing,
+  editForm,
+  onSaveEdit,
+  onCancelEdit,
+  onEditFormChange,
 }: {
   category: Category;
-  onEdit: (cat: Category) => void;
+  onToggleVisible: (cat: Category) => void;
+  onEditClick: (cat: Category) => void;
   onDelete: (id: string) => void;
+  isEditing: boolean;
+  editForm: { name: string; description: string; isVisible: boolean };
+  onSaveEdit: () => void;
+  onCancelEdit: () => void;
+  onEditFormChange: (field: string, value: string | boolean) => void;
 }) {
   const {
     attributes,
@@ -72,47 +78,114 @@ function SortableCategoryItem({
     zIndex: isDragging ? 50 : undefined,
   };
 
+  if (isEditing) {
+    return (
+      <div className="rounded-2xl border border-terracotta/20 bg-terracotta/5 p-4">
+        <div className="space-y-3">
+          <div className="grid gap-3 sm:grid-cols-2">
+            <div>
+              <Label className="text-xs text-warm-gray">Nombre</Label>
+              <Input
+                value={editForm.name}
+                onChange={(e) => onEditFormChange("name", e.target.value)}
+                className="mt-1 rounded-xl border-sand bg-white text-sm focus-visible:border-terracotta focus-visible:ring-terracotta/30"
+              />
+            </div>
+            <div>
+              <Label className="text-xs text-warm-gray">Descripción</Label>
+              <Input
+                value={editForm.description}
+                onChange={(e) => onEditFormChange("description", e.target.value)}
+                className="mt-1 rounded-xl border-sand bg-white text-sm focus-visible:border-terracotta focus-visible:ring-terracotta/30"
+              />
+            </div>
+          </div>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Switch
+                checked={editForm.isVisible}
+                onCheckedChange={(checked) => onEditFormChange("isVisible", checked)}
+              />
+              <span className="text-sm text-coffee">Visible en la carta</span>
+            </div>
+            <div className="flex gap-2">
+              <Button
+                type="button"
+                size="sm"
+                variant="outline"
+                onClick={onCancelEdit}
+                className="rounded-xl border-sand"
+              >
+                <X className="mr-1 h-3.5 w-3.5" />
+                Cancelar
+              </Button>
+              <Button
+                type="button"
+                size="sm"
+                onClick={onSaveEdit}
+                className="rounded-xl bg-terracotta text-white hover:bg-terracotta-deep"
+              >
+                <Check className="mr-1 h-3.5 w-3.5" />
+                Guardar
+              </Button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div
       ref={setNodeRef}
       style={style}
-      className={`flex items-center gap-3 rounded-lg border bg-card p-4 ${isDragging ? "shadow-lg opacity-80" : ""}`}
+      className={`flex items-center gap-3 rounded-xl border bg-white p-3.5 transition-shadow ${
+        isDragging
+          ? "border-terracotta/30 shadow-lg opacity-90"
+          : "border-sand shadow-sm hover:shadow-md"
+      }`}
     >
       <button
         {...attributes}
         {...listeners}
-        className="cursor-grab active:cursor-grabbing text-muted-foreground"
+        className="flex h-8 w-8 shrink-0 cursor-grab items-center justify-center rounded-lg text-warm-gray transition-colors hover:bg-sand/60 active:cursor-grabbing"
+        aria-label="Reordenar categoría"
       >
-        <GripVertical className="h-5 w-5" />
+        <GripVertical className="h-4 w-4" />
       </button>
-      <div className="flex-1">
-        <p className="font-medium">{category.name}</p>
+
+      <div className="flex-1 min-w-0">
+        <p className="truncate text-sm font-semibold text-coffee">{category.name}</p>
         {category.description && (
-          <p className="text-sm text-muted-foreground">
-            {category.description}
-          </p>
+          <p className="truncate text-xs text-warm-gray">{category.description}</p>
         )}
       </div>
-      <Switch
-        checked={category.isVisible}
-        onCheckedChange={(checked) =>
-          onEdit({ ...category, isVisible: checked })
-        }
-      />
-      <Button
-        variant="ghost"
-        size="icon"
-        onClick={() => onEdit(category)}
-      >
-        <Pencil className="h-4 w-4" />
-      </Button>
-      <Button
-        variant="ghost"
-        size="icon"
-        onClick={() => onDelete(category.id)}
-      >
-        <Trash2 className="h-4 w-4 text-destructive" />
-      </Button>
+
+      <div className="flex items-center gap-1">
+        <Switch
+          checked={category.isVisible}
+          onCheckedChange={() => onToggleVisible(category)}
+          aria-label={`${category.isVisible ? "Ocultar" : "Mostrar"} ${category.name}`}
+        />
+        <Button
+          variant="ghost"
+          size="icon-sm"
+          onClick={() => onEditClick(category)}
+          className="h-8 w-8 rounded-lg text-warm-gray hover:bg-sand/60 hover:text-coffee"
+          aria-label={`Editar ${category.name}`}
+        >
+          <Pencil className="h-3.5 w-3.5" />
+        </Button>
+        <Button
+          variant="ghost"
+          size="icon-sm"
+          onClick={() => onDelete(category.id)}
+          className="h-8 w-8 rounded-lg text-warm-gray hover:bg-red-50 hover:text-red-600"
+          aria-label={`Eliminar ${category.name}`}
+        >
+          <Trash2 className="h-3.5 w-3.5" />
+        </Button>
+      </div>
     </div>
   );
 }
@@ -126,9 +199,10 @@ export default function CategoriesPage() {
   const reorderCategories = useReorderCategories();
 
   const [items, setItems] = useState<Category[]>([]);
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [editingCategory, setEditingCategory] = useState<Category | null>(null);
-  const [form, setForm] = useState({ name: "", description: "", isVisible: true });
+  const [isCreating, setIsCreating] = useState(false);
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [createForm, setCreateForm] = useState({ name: "", description: "", isVisible: true });
+  const [editForm, setEditForm] = useState({ name: "", description: "", isVisible: true });
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -175,33 +249,25 @@ export default function CategoriesPage() {
     });
   };
 
-  const handleDeleteCategory = (id: string) => {
-    if (!activeBusinessId) return;
-    handleDelete(id);
+  const handleEditClick = (cat: Category) => {
+    setEditingId(cat.id);
+    setEditForm({
+      name: cat.name,
+      description: cat.description || "",
+      isVisible: cat.isVisible,
+    });
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!activeBusinessId) return;
-
+  const handleSaveEdit = async () => {
+    if (!activeBusinessId || !editingId) return;
     try {
-      if (editingCategory) {
-        await updateCategory.mutateAsync({
-          businessId: activeBusinessId,
-          id: editingCategory.id,
-          data: form,
-        });
-        toast.success("Categoría actualizada");
-      } else {
-        await createCategory.mutateAsync({
-          businessId: activeBusinessId,
-          data: form,
-        });
-        toast.success("Categoría creada");
-      }
-      setIsDialogOpen(false);
-      setEditingCategory(null);
-      setForm({ name: "", description: "", isVisible: true });
+      await updateCategory.mutateAsync({
+        businessId: activeBusinessId,
+        id: editingId,
+        data: editForm,
+      });
+      toast.success("Categoría actualizada");
+      setEditingId(null);
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Error al guardar");
     }
@@ -209,7 +275,7 @@ export default function CategoriesPage() {
 
   const handleDelete = async (id: string) => {
     if (!activeBusinessId) return;
-    if (!confirm("¿Eliminar esta categoría?")) return;
+    if (!confirm("¿Eliminar esta categoría? Los productos asociados quedarán sin categoría.")) return;
     try {
       await deleteCategory.mutateAsync({ businessId: activeBusinessId, id });
       toast.success("Categoría eliminada");
@@ -218,104 +284,186 @@ export default function CategoriesPage() {
     }
   };
 
+  const handleCreate = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!activeBusinessId) return;
+    try {
+      await createCategory.mutateAsync({
+        businessId: activeBusinessId,
+        data: createForm,
+      });
+      toast.success("Categoría creada");
+      setIsCreating(false);
+      setCreateForm({ name: "", description: "", isVisible: true });
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Error al crear");
+    }
+  };
+
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center py-12">
-        <Loader2 className="h-8 w-8 animate-spin" />
+      <div className="flex items-center justify-center py-16">
+        <Loader2 className="h-8 w-8 animate-spin text-terracotta" />
       </div>
     );
   }
 
   if (!activeBusinessId) {
     return (
-      <div className="text-center py-12">
-        <p className="text-muted-foreground">
-          Selecciona un negocio para gestionar categorías.
-        </p>
+      <div className="flex flex-col items-center gap-5 py-16 text-center">
+        <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-sand/60">
+          <Tag className="h-8 w-8 text-warm-gray" />
+        </div>
+        <div className="space-y-1">
+          <p className="text-lg font-semibold text-coffee">Selecciona un negocio</p>
+          <p className="max-w-xs text-sm leading-relaxed text-warm-gray">
+            Necesitas tener un negocio activo para gestionar las categorías de tu menú.
+          </p>
+        </div>
+        <Link
+          href="/dashboard/business"
+          className="inline-flex items-center gap-1.5 rounded-xl bg-terracotta px-4 py-2.5 text-sm font-medium text-white shadow-sm transition-colors hover:bg-terracotta-deep"
+        >
+          Ir a Mi Negocio <ArrowRight className="h-4 w-4" />
+        </Link>
       </div>
     );
   }
 
   return (
-    <div className="space-y-6">
+    <div className="max-w-2xl mx-auto space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">Categorías</h1>
-        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-          <DialogTrigger>
-            <Button
-              onClick={() => {
-                setEditingCategory(null);
-                setForm({ name: "", description: "", isVisible: true });
-              }}
-            >
-              <Plus className="mr-2 h-4 w-4" />
-              Nueva categoría
-            </Button>
-          </DialogTrigger>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>
-                {editingCategory ? "Editar categoría" : "Nueva categoría"}
-              </DialogTitle>
-            </DialogHeader>
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div>
-                <Label htmlFor="name">Nombre</Label>
-                <Input
-                  id="name"
-                  value={form.name}
-                  onChange={(e) => setForm({ ...form, name: e.target.value })}
-                  required
-                />
-              </div>
-              <div>
-                <Label htmlFor="description">Descripción</Label>
-                <Input
-                  id="description"
-                  value={form.description}
-                  onChange={(e) =>
-                    setForm({ ...form, description: e.target.value })
-                  }
-                />
-              </div>
-              <div className="flex items-center gap-2">
-                <Switch
-                  checked={form.isVisible}
-                  onCheckedChange={(checked) =>
-                    setForm({ ...form, isVisible: checked })
-                  }
-                />
-                <Label>Visible</Label>
-              </div>
-              <Button type="submit" className="w-full">
-                {editingCategory ? "Actualizar" : "Crear"}
-              </Button>
-            </form>
-          </DialogContent>
-        </Dialog>
+        <div>
+          <h1 className="font-heading text-2xl font-bold text-coffee">Categorías</h1>
+          <p className="mt-1 text-sm text-warm-gray">
+            Organiza tu menú en categorías. Arrastra para reordenar.
+          </p>
+        </div>
+        {!isCreating && (
+          <Button
+            onClick={() => setIsCreating(true)}
+            className="bg-terracotta text-white shadow-sm transition-colors hover:bg-terracotta-deep"
+          >
+            <Plus className="mr-2 h-4 w-4" />
+            Nueva categoría
+          </Button>
+        )}
       </div>
 
-      <DndContext
-        sensors={sensors}
-        collisionDetection={closestCenter}
-        onDragEnd={handleDragEnd}
-      >
-        <SortableContext
-          items={items.map((i) => i.id)}
-          strategy={verticalListSortingStrategy}
+      {isCreating && (
+        <form
+          onSubmit={handleCreate}
+          className="rounded-2xl border border-terracotta/20 bg-terracotta/5 p-4"
         >
-          <div className="space-y-2">
-            {items.map((category) => (
-              <SortableCategoryItem
-                key={category.id}
-                category={category}
-                onEdit={handleToggleVisible}
-                onDelete={handleDeleteCategory}
+          <p className="mb-3 text-sm font-semibold text-coffee">Nueva categoría</p>
+          <div className="grid gap-3 sm:grid-cols-2">
+            <div>
+              <Label className="text-xs text-warm-gray">Nombre</Label>
+              <Input
+                value={createForm.name}
+                onChange={(e) => setCreateForm({ ...createForm, name: e.target.value })}
+                placeholder="Ej: Entradas"
+                required
+                className="mt-1 rounded-xl border-sand bg-white text-sm focus-visible:border-terracotta focus-visible:ring-terracotta/30"
               />
-            ))}
+            </div>
+            <div>
+              <Label className="text-xs text-warm-gray">Descripción</Label>
+              <Input
+                value={createForm.description}
+                onChange={(e) => setCreateForm({ ...createForm, description: e.target.value })}
+                placeholder="Opcional"
+                className="mt-1 rounded-xl border-sand bg-white text-sm focus-visible:border-terracotta focus-visible:ring-terracotta/30"
+              />
+            </div>
           </div>
-        </SortableContext>
-      </DndContext>
+          <div className="mt-3 flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Switch
+                checked={createForm.isVisible}
+                onCheckedChange={(checked) =>
+                  setCreateForm({ ...createForm, isVisible: checked })
+                }
+              />
+              <span className="text-sm text-coffee">Visible en la carta</span>
+            </div>
+            <div className="flex gap-2">
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => setIsCreating(false)}
+                className="rounded-xl border-sand"
+              >
+                Cancelar
+              </Button>
+              <Button
+                type="submit"
+                size="sm"
+                disabled={createCategory.isPending}
+                className="rounded-xl bg-terracotta text-white hover:bg-terracotta-deep"
+              >
+                {createCategory.isPending && (
+                  <Loader2 className="mr-1.5 h-3.5 w-3.5 animate-spin" />
+                )}
+                Crear
+              </Button>
+            </div>
+          </div>
+        </form>
+      )}
+
+      {items.length === 0 && !isCreating ? (
+        <div className="flex flex-col items-center gap-4 rounded-2xl border border-dashed border-sand bg-white py-12 text-center">
+          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-sand/40">
+            <Tag className="h-6 w-6 text-warm-gray" />
+          </div>
+          <div className="space-y-1">
+            <p className="text-sm font-semibold text-coffee">Sin categorías aún</p>
+            <p className="max-w-xs text-sm text-warm-gray">
+              Las categorías ayudan a tus clientes a encontrar lo que buscan más rápido.
+            </p>
+          </div>
+          <Button
+            onClick={() => setIsCreating(true)}
+            variant="outline"
+            className="rounded-xl border-sand"
+          >
+            <Plus className="mr-2 h-4 w-4" />
+            Crear primera categoría
+          </Button>
+        </div>
+      ) : (
+        <DndContext
+          sensors={sensors}
+          collisionDetection={closestCenter}
+          onDragEnd={handleDragEnd}
+        >
+          <SortableContext
+            items={items.map((i) => i.id)}
+            strategy={verticalListSortingStrategy}
+          >
+            <div className="space-y-2">
+              {items.map((category) => (
+                <SortableCategoryItem
+                  key={category.id}
+                  category={category}
+                  onToggleVisible={handleToggleVisible}
+                  onEditClick={handleEditClick}
+                  onDelete={handleDelete}
+                  isEditing={editingId === category.id}
+                  editForm={editForm}
+                  onSaveEdit={handleSaveEdit}
+                  onCancelEdit={() => setEditingId(null)}
+                  onEditFormChange={(field, value) =>
+                    setEditForm((prev) => ({ ...prev, [field]: value }))
+                  }
+                />
+              ))}
+            </div>
+          </SortableContext>
+        </DndContext>
+      )}
     </div>
   );
 }

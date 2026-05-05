@@ -2,9 +2,8 @@
 
 import { useRef, useCallback, useState } from "react";
 import { QRCodeSVG, QRCodeCanvas } from "qrcode.react";
-import { Download, Copy, Check } from "lucide-react";
+import { Download, Copy, Check, Link2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { toast } from "sonner";
 
 interface QrGeneratorProps {
@@ -61,14 +60,8 @@ export function QrGenerator({ slug, logoUrl, businessName }: QrGeneratorProps) {
   const logoSize = 56;
 
   return (
-    <Card className="max-w-md mx-auto">
-      <CardHeader className="text-center">
-        <CardTitle>Código QR de {businessName}</CardTitle>
-        <CardDescription>
-          Escanea para ver la carta digital
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="flex flex-col items-center gap-6">
+    <div className="rounded-2xl border border-sand bg-white p-6 shadow-sm">
+      <div className="flex flex-col items-center gap-6">
         {/* Hidden canvas for PNG download */}
         <div className="hidden">
           <QRCodeCanvas
@@ -80,7 +73,7 @@ export function QrGenerator({ slug, logoUrl, businessName }: QrGeneratorProps) {
         </div>
 
         {/* Visible SVG QR */}
-        <div className="relative rounded-xl border bg-white p-4 shadow-sm">
+        <div className="relative rounded-xl border border-sand bg-white p-5 shadow-sm">
           <QRCodeSVG
             value={publicUrl}
             size={qrSize}
@@ -91,7 +84,7 @@ export function QrGenerator({ slug, logoUrl, businessName }: QrGeneratorProps) {
           {logoUrl && (
             <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
               <div
-                className="rounded-lg border-2 border-white bg-white shadow-sm overflow-hidden"
+                className="rounded-xl border-2 border-white bg-white shadow-sm overflow-hidden"
                 style={{ width: logoSize, height: logoSize }}
               >
                 <img
@@ -104,28 +97,46 @@ export function QrGenerator({ slug, logoUrl, businessName }: QrGeneratorProps) {
           )}
         </div>
 
-        <div className="flex flex-col gap-2 w-full">
-          <div className="flex items-center gap-2 rounded-lg border bg-muted px-3 py-2">
-            <span className="flex-1 truncate text-sm text-muted-foreground">
+        <div className="w-full max-w-sm space-y-3">
+          <div className="flex items-center gap-2 rounded-xl border border-sand bg-cream/40 px-3 py-2.5">
+            <Link2 className="h-4 w-4 shrink-0 text-warm-gray" />
+            <span className="flex-1 truncate text-sm text-coffee">
               {publicUrl}
             </span>
-            <Button variant="ghost" size="sm" onClick={copyLink} className="shrink-0">
-              {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={copyLink}
+              className="shrink-0 rounded-lg text-warm-gray hover:bg-sand/60 hover:text-coffee"
+            >
+              {copied ? <Check className="h-4 w-4 text-moss" /> : <Copy className="h-4 w-4" />}
             </Button>
           </div>
 
-          <div className="grid grid-cols-2 gap-2">
-            <Button variant="outline" onClick={downloadPng} className="w-full">
+          <div className="grid grid-cols-2 gap-3">
+            <Button
+              variant="outline"
+              onClick={downloadPng}
+              className="w-full rounded-xl border-sand hover:bg-sand/40"
+            >
               <Download className="mr-2 h-4 w-4" />
               PNG
             </Button>
-            <Button variant="outline" onClick={downloadSvg} className="w-full">
+            <Button
+              variant="outline"
+              onClick={downloadSvg}
+              className="w-full rounded-xl border-sand hover:bg-sand/40"
+            >
               <Download className="mr-2 h-4 w-4" />
               SVG
             </Button>
           </div>
         </div>
-      </CardContent>
-    </Card>
+
+        <p className="text-center text-xs text-warm-gray">
+          Escanea el código para ver la carta digital de {businessName}
+        </p>
+      </div>
+    </div>
   );
 }

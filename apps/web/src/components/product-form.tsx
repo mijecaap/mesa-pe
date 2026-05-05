@@ -3,13 +3,12 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { Loader2, Save } from "lucide-react";
+import { Loader2, Save, X, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ImageUpload } from "@/components/image-upload";
 import { useCategories } from "@/hooks/use-categories";
 import { useCreateProduct, useUpdateProduct } from "@/hooks/use-products";
@@ -105,152 +104,150 @@ export function ProductForm({ initialData }: ProductFormProps) {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
-      <Card>
-        <CardHeader>
-          <CardTitle>Información del producto</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
+      <section className="rounded-2xl border border-sand bg-white p-5 shadow-sm">
+        <div className="mb-4">
+          <h2 className="text-base font-semibold text-coffee">Información del producto</h2>
+          <p className="text-sm text-warm-gray">Los datos básicos que verán tus clientes.</p>
+        </div>
+        <div className="space-y-4">
           <div>
-            <Label htmlFor="category">Categoría</Label>
-            <select
-              id="category"
-              value={form.categoryId}
-              onChange={(e) =>
-                setForm({ ...form, categoryId: e.target.value })
-              }
-              className="w-full rounded-md border bg-background px-3 py-2 text-sm"
-              required
-            >
-              <option value="">Seleccionar categoría</option>
-              {categories?.map((cat: { id: string; name: string }) => (
-                <option key={cat.id} value={cat.id}>
-                  {cat.name}
-                </option>
-              ))}
-            </select>
+            <Label htmlFor="category" className="text-coffee">Categoría</Label>
+            <div className="relative mt-1.5">
+              <select
+                id="category"
+                value={form.categoryId}
+                onChange={(e) => setForm({ ...form, categoryId: e.target.value })}
+                className="w-full appearance-none rounded-xl border border-sand bg-cream/40 px-3 py-2.5 pr-8 text-sm text-coffee focus-visible:border-terracotta focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-terracotta/30"
+                required
+              >
+                <option value="">Seleccionar categoría</option>
+                {categories?.map((cat: { id: string; name: string }) => (
+                  <option key={cat.id} value={cat.id}>
+                    {cat.name}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
           <div>
-            <Label htmlFor="name">Nombre</Label>
+            <Label htmlFor="name" className="text-coffee">Nombre</Label>
             <Input
               id="name"
               value={form.name}
               onChange={(e) => setForm({ ...form, name: e.target.value })}
               required
+              className="mt-1.5 rounded-xl border-sand bg-cream/40 focus-visible:border-terracotta focus-visible:ring-terracotta/30"
             />
           </div>
           <div>
-            <Label htmlFor="description">Descripción</Label>
+            <Label htmlFor="description" className="text-coffee">Descripción</Label>
             <Textarea
               id="description"
               value={form.description}
-              onChange={(e) =>
-                setForm({ ...form, description: e.target.value })
-              }
+              onChange={(e) => setForm({ ...form, description: e.target.value })}
               rows={3}
+              className="mt-1.5 rounded-xl border-sand bg-cream/40 focus-visible:border-terracotta focus-visible:ring-terracotta/30"
             />
           </div>
           <div>
-            <Label htmlFor="price">Precio (PEN)</Label>
+            <Label htmlFor="price" className="text-coffee">Precio (PEN)</Label>
             <Input
               id="price"
               type="number"
               step="0.01"
               min="0"
               value={form.basePrice}
-              onChange={(e) =>
-                setForm({ ...form, basePrice: e.target.value })
-              }
+              onChange={(e) => setForm({ ...form, basePrice: e.target.value })}
               required
+              className="mt-1.5 rounded-xl border-sand bg-cream/40 focus-visible:border-terracotta focus-visible:ring-terracotta/30"
             />
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </section>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Imagen</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <ImageUpload
-            value={form.imageUrl}
-            onChange={(url) => setForm({ ...form, imageUrl: url })}
-          />
-        </CardContent>
-      </Card>
+      <section className="rounded-2xl border border-sand bg-white p-5 shadow-sm">
+        <div className="mb-4">
+          <h2 className="text-base font-semibold text-coffee">Imagen</h2>
+          <p className="text-sm text-warm-gray">Una foto atractiva aumenta los pedidos.</p>
+        </div>
+        <ImageUpload
+          value={form.imageUrl}
+          onChange={(url) => setForm({ ...form, imageUrl: url })}
+        />
+      </section>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Etiquetas</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="flex flex-wrap gap-2">
-            {AVAILABLE_TAGS.map((tag) => (
+      <section className="rounded-2xl border border-sand bg-white p-5 shadow-sm">
+        <div className="mb-4">
+          <h2 className="text-base font-semibold text-coffee">Etiquetas</h2>
+          <p className="text-sm text-warm-gray">Destaca características especiales del producto.</p>
+        </div>
+        <div className="flex flex-wrap gap-2">
+          {AVAILABLE_TAGS.map((tag) => {
+            const isActive = form.tags.includes(tag.value as typeof form.tags[number]);
+            return (
               <button
                 key={tag.value}
                 type="button"
                 onClick={() => toggleTag(tag.value as typeof form.tags[number])}
-                className={`rounded-full px-3 py-1 text-sm font-medium transition-colors ${
-                  form.tags.includes(tag.value as typeof form.tags[number])
-                    ? "bg-primary text-primary-foreground"
-                    : "bg-muted text-muted-foreground hover:bg-muted/80"
+                className={`inline-flex items-center gap-1 rounded-full px-3.5 py-1.5 text-sm font-medium transition-colors ${
+                  isActive
+                    ? "bg-terracotta text-white"
+                    : "border border-sand bg-cream text-warm-gray hover:bg-sand/60"
                 }`}
               >
+                {isActive && <Check className="h-3 w-3" />}
                 {tag.label}
               </button>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
+            );
+          })}
+        </div>
+      </section>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Visibilidad</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="flex items-center justify-between">
+      <section className="rounded-2xl border border-sand bg-white p-5 shadow-sm">
+        <div className="mb-4">
+          <h2 className="text-base font-semibold text-coffee">Visibilidad</h2>
+          <p className="text-sm text-warm-gray">Controla si el producto aparece en tu carta.</p>
+        </div>
+        <div className="space-y-4">
+          <div className="flex items-center justify-between rounded-xl bg-cream/40 p-4">
             <div>
-              <Label htmlFor="visible">Visible en menú</Label>
-              <p className="text-sm text-muted-foreground">
-                Mostrar este producto en la página pública
-              </p>
+              <Label htmlFor="visible" className="text-coffee">Visible en menú</Label>
+              <p className="text-sm text-warm-gray">Mostrar este producto en la página pública.</p>
             </div>
             <Switch
               id="visible"
               checked={form.isVisible}
-              onCheckedChange={(checked) =>
-                setForm({ ...form, isVisible: checked })
-              }
+              onCheckedChange={(checked) => setForm({ ...form, isVisible: checked })}
             />
           </div>
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between rounded-xl bg-cream/40 p-4">
             <div>
-              <Label htmlFor="available">Disponible</Label>
-              <p className="text-sm text-muted-foreground">
-                Marcar como agotado si no está disponible
-              </p>
+              <Label htmlFor="available" className="text-coffee">Disponible</Label>
+              <p className="text-sm text-warm-gray">Marca como agotado si no está disponible temporalmente.</p>
             </div>
             <Switch
               id="available"
               checked={form.isAvailable}
-              onCheckedChange={(checked) =>
-                setForm({ ...form, isAvailable: checked })
-              }
+              onCheckedChange={(checked) => setForm({ ...form, isAvailable: checked })}
             />
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </section>
 
-      <div className="flex justify-end gap-2">
+      <div className="flex justify-end gap-3">
         <Button
           type="button"
           variant="outline"
           onClick={() => router.push("/dashboard/products")}
+          className="rounded-xl border-sand"
         >
+          <X className="mr-2 h-4 w-4" />
           Cancelar
         </Button>
         <Button
           type="submit"
           disabled={createProduct.isPending || updateProduct.isPending}
+          className="bg-terracotta text-white shadow-sm transition-colors hover:bg-terracotta-deep"
         >
           {(createProduct.isPending || updateProduct.isPending) && (
             <Loader2 className="mr-2 h-4 w-4 animate-spin" />
