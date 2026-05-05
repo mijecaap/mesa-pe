@@ -15,6 +15,7 @@ import { PaymentMethodsModule } from './modules/payment-methods/payment-methods.
 import { DeliveryZonesModule } from './modules/delivery-zones/delivery-zones.module';
 import { OrderLeadsModule } from './modules/order-leads/order-leads.module';
 import { AnalyticsModule } from './modules/analytics/analytics.module';
+import { PromotionsModule } from './modules/promotions/promotions.module';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { AnalyticsModule } from './modules/analytics/analytics.module';
     DeliveryZonesModule,
     OrderLeadsModule,
     AnalyticsModule,
+    PromotionsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

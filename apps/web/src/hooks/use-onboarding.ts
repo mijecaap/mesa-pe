@@ -13,29 +13,24 @@ const DEFAULT_STATE: OnboardingState = {
   completedSteps: [],
 };
 
+function loadState(): OnboardingState {
+  if (typeof window === "undefined") return DEFAULT_STATE;
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    return saved ? JSON.parse(saved) : DEFAULT_STATE;
+  } catch {
+    return DEFAULT_STATE;
+  }
+}
+
 export function useOnboarding() {
-  // Inicializar SIEMPRE con el valor por defecto (consistente entre SSR y cliente)
-  // para evitar hydration mismatch. El valor real de localStorage se carga en useEffect.
-  const [state, setState] = useState<OnboardingState>(DEFAULT_STATE);
-  const [isHydrated, setIsHydrated] = useState(false);
+  const [state, setState] = useState<OnboardingState>(loadState);
 
   useEffect(() => {
-    setIsHydrated(true);
-    try {
-      const saved = localStorage.getItem(STORAGE_KEY);
-      if (saved) {
-        setState(JSON.parse(saved));
-      }
-    } catch {
-      // ignore parse errors
-    }
-  }, []);
-
-  useEffect(() => {
-    if (isHydrated) {
+    if (typeof window !== "undefined") {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
     }
-  }, [state, isHydrated]);
+  }, [state]);
 
   const goToStep = useCallback((step: number) => {
     setState((prev) => ({
@@ -67,13 +62,15 @@ export function useOnboarding() {
   }, []);
 
   const clearOnboarding = useCallback(() => {
-    localStorage.removeItem(STORAGE_KEY);
+    if (typeof window !== "undefined") {
+      localStorage.removeItem(STORAGE_KEY);
+    }
     setState({ currentStep: 1, businessId: null, completedSteps: [] });
   }, []);
 
   return {
     ...state,
-    isHydrated,
+    isHydrated: typeof window !== "undefined",
     goToStep,
     nextStep,
     prevStep,

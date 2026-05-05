@@ -18,8 +18,12 @@ export class MediaService {
         secretAccessKey: process.env.S3_SECRET_ACCESS_KEY!,
       },
     });
-    this.bucket = process.env.S3_BUCKET_NAME || 'mesa-pe';
-    this.publicUrl = process.env.S3_PUBLIC_URL || process.env.S3_ENDPOINT || '';
+    this.bucket = process.env.S3_BUCKET || 'mesa-pe';
+    this.publicUrl = (
+      process.env.S3_PUBLIC_BASE_URL ||
+      process.env.S3_ENDPOINT ||
+      ''
+    ).replace(/\/$/, '');
   }
 
   async generatePresignedUrl(

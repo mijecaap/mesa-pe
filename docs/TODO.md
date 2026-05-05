@@ -281,7 +281,7 @@
 
 ### Fase 2: Beta Pagada
 
-- [ ] Sistema de promociones (banners, destacados)
+- [x] Sistema de promociones (banners, destacados)
 - [ ] Plantillas visuales (temas)
 - [ ] Exportar QR en PDF
 - [ ] Mejor onboarding con tooltips
@@ -388,4 +388,16 @@
 - **Marca de agua Free**: Footer discreto "Carta digital creada con Mesa.pe" en páginas públicas de negocios con `plan === 'FREE'`.
 - **Badges de plan en sidebar**: Badge visual del plan actual junto al selector de negocio. Mini CTA "Upgrade →" para planes Free.
 - **Tracking dual**: `trackEvent()` ahora envía eventos a PostHog Y al backend vía `fetch` fire-and-forget. Session ID persistido en `sessionStorage`.
+- Builds y lint pasan en ambos proyectos.
+
+### 2026-05-04 (Post-MVP — Sistema de Promociones)
+- **Schema Prisma**: Agregados `ctaUrl`, `buttonText`, `createdAt` y `updatedAt` al modelo `Promotion`. Sincronizado en Neon PostgreSQL.
+- **Backend**: Nuevo `PromotionsModule` (Controller, Service, DTOs). Endpoints CRUD bajo `GET|POST|PATCH|DELETE /businesses/:id/promotions` protegidos con `ClerkAuthGuard` + `TenantGuard`. Validación de límites de plan: Free=1, Starter=3, Pro=999.
+- **PlanLimitsService** y **FeatureFlagsService**: Agregados `promotions` a los límites y flags (`canCreatePromotion`, `promotionsRemaining`).
+- **Shared types**: Nuevo `promotion.schema.ts` exportado desde `@mesa/shared-types` con Zod schemas `createPromotionSchema` y `updatePromotionSchema`.
+- **Dashboard admin**: Nueva página `/dashboard/promotions` con lista de promociones, modal de crear/editar (título, descripción, imagen, CTA, fechas, activo/inactivo). Hooks `usePromotions`, `useCreatePromotion`, `useUpdatePromotion`, `useDeletePromotion`. Integrado en sidebar.
+- **Página pública**: `PromotionBanner` mejorado con carrusel CSS scroll-snap, navegación con flechas, dots indicadores, fechas de vigencia visibles, y CTA funcional (`ctaUrl` con `buttonText` personalizable).
+- **Landing page**: Feature "Promociones y banners" agregada a la sección Features. Tabla de precios actualizada con límites de promociones por plan.
+- **Seed**: 8 promociones demo agregadas a los 5 negocios ficticios.
+- **Fixes de lint**: Arreglados errores preexistentes de `react-hooks/rules-of-hooks` y `react-hooks/set-state-in-effect` en `closed-overlay.tsx` y `use-onboarding.ts`.
 - Builds y lint pasan en ambos proyectos.

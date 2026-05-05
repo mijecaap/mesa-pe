@@ -19,6 +19,7 @@ import {
   QrCode,
   BarChart3,
   Menu,
+  Megaphone,
 } from "lucide-react";
 import { useBusinesses } from "@/hooks/use-business";
 import { useFeatureFlags } from "@/hooks/use-feature-flags";
@@ -37,6 +38,7 @@ const navItems = [
   { href: "/dashboard/hours", label: "Horarios", icon: Clock },
   { href: "/dashboard/categories", label: "Categorías", icon: Tags },
   { href: "/dashboard/products", label: "Productos", icon: UtensilsCrossed },
+  { href: "/dashboard/promotions", label: "Promociones", icon: Megaphone },
   { href: "/dashboard/qr", label: "Código QR", icon: QrCode },
   { href: "/dashboard/analytics", label: "Analytics", icon: BarChart3 },
   { href: "/dashboard/settings", label: "Configuración", icon: Settings },

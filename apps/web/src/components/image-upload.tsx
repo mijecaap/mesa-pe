@@ -4,6 +4,7 @@ import { useState, useCallback } from "react";
 import { toast } from "sonner";
 import { Upload, Loader2, X } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useApiClient } from "@/lib/api";
 
 interface ImageUploadProps {
   value?: string;
@@ -13,6 +14,7 @@ interface ImageUploadProps {
 
 export function ImageUpload({ value, onChange, className }: ImageUploadProps) {
   const [isUploading, setIsUploading] = useState(false);
+  const { fetchWithAuth } = useApiClient();
 
   const handleFileChange = useCallback(
     async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -34,21 +36,14 @@ export function ImageUpload({ value, onChange, className }: ImageUploadProps) {
 
       try {
         // Get presigned URL
-        const presignedRes = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/media/presigned-url`,
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              filename: file.name,
-              contentType: file.type,
-              fileSize: file.size,
-            }),
-          },
-        );
-
-        if (!presignedRes.ok) throw new Error("Error al obtener URL de subida");
-        const { presignedUrl, key } = await presignedRes.json();
+        const { presignedUrl, key } = await fetchWithAuth("/media/presigned-url", {
+          method: "POST",
+          body: JSON.stringify({
+            filename: file.name,
+            contentType: file.type,
+            fileSize: file.size,
+          }),
+        });
 
         // Upload to R2
         await fetch(presignedUrl, {
@@ -58,17 +53,10 @@ export function ImageUpload({ value, onChange, className }: ImageUploadProps) {
         });
 
         // Confirm upload
-        const confirmRes = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/media/confirm`,
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ key }),
-          },
-        );
-
-        if (!confirmRes.ok) throw new Error("Error al confirmar subida");
-        const { publicUrl } = await confirmRes.json();
+        const { publicUrl } = await fetchWithAuth("/media/confirm", {
+          method: "POST",
+          body: JSON.stringify({ key }),
+        });
 
         onChange(publicUrl);
         toast.success("Imagen subida correctamente");
@@ -78,7 +66,7 @@ export function ImageUpload({ value, onChange, className }: ImageUploadProps) {
         setIsUploading(false);
       }
     },
-    [onChange],
+    [onChange, fetchWithAuth],
   );
 
   return (

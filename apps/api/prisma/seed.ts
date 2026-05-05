@@ -44,6 +44,10 @@ const businesses = [
       { name: 'Miraflores', deliveryFee: 5.00, estimatedMinutes: 25 },
       { name: 'San Isidro', deliveryFee: 7.00, estimatedMinutes: 35 },
     ],
+    promotions: [
+      { title: '2x1 en Sándwiches de Chicharrón', description: 'Todos los martes y jueves. Válido de 12pm a 4pm.', ctaUrl: null, buttonText: 'Ver más', startDate: null, endDate: null, isActive: true },
+      { title: 'Combo Familiar', description: '4 sándwiches + 4 bebidas por S/ 60. Solo por tiempo limitado.', ctaUrl: null, buttonText: 'Pedir combo', startDate: null, endDate: null, isActive: true },
+    ],
   },
   {
     slug: 'puku-puku-cafe',
@@ -77,6 +81,9 @@ const businesses = [
       { name: 'Centro Histórico', deliveryFee: 4.00, estimatedMinutes: 20 },
       { name: 'Cercado de Lima', deliveryFee: 6.00, estimatedMinutes: 30 },
     ],
+    promotions: [
+      { title: 'Café + Postre S/ 20', description: 'Lleva cualquier café y un postre por solo S/ 20. Válido de lunes a viernes.', ctaUrl: null, buttonText: 'Ver oferta', startDate: null, endDate: null, isActive: true },
+    ],
   },
   {
     slug: 'tanta-lima',
@@ -106,6 +113,9 @@ const businesses = [
     ],
     zones: [
       { name: 'San Isidro', deliveryFee: 6.00, estimatedMinutes: 30 },
+    ],
+    promotions: [
+      { title: 'Lomo Saltado S/ 30', description: 'Descuento especial en nuestro plato estrella. Solo hoy.', ctaUrl: null, buttonText: 'Aprovechar', startDate: null, endDate: null, isActive: true },
     ],
   },
   {
@@ -138,6 +148,10 @@ const businesses = [
     zones: [
       { name: 'Cercado de Lima', deliveryFee: 5.00, estimatedMinutes: 25 },
       { name: 'Miraflores', deliveryFee: 8.00, estimatedMinutes: 40 },
+    ],
+    promotions: [
+      { title: 'Sánguche del Día S/ 15', description: 'Un sánguche diferente cada día a precio especial.', ctaUrl: null, buttonText: 'Ver menú', startDate: null, endDate: null, isActive: true },
+      { title: 'Delivery Gratis', description: 'Sin costo de delivery en pedidos mayores a S/ 40.', ctaUrl: null, buttonText: 'Pedir ahora', startDate: null, endDate: null, isActive: true },
     ],
   },
   {
@@ -175,6 +189,10 @@ const businesses = [
       { name: 'Barranco', deliveryFee: 4.00, estimatedMinutes: 20 },
       { name: 'Miraflores', deliveryFee: 6.00, estimatedMinutes: 30 },
       { name: 'Chorrillos', deliveryFee: 7.00, estimatedMinutes: 35 },
+    ],
+    promotions: [
+      { title: 'Brunch para Dos S/ 55', description: '2 cafés + 2 platos de brunch. Ideal para compartir los fines de semana.', ctaUrl: null, buttonText: 'Reservar', startDate: null, endDate: null, isActive: true },
+      { title: 'Happy Hour Café', description: '2x1 en todos los cafés de 4pm a 6pm.', ctaUrl: null, buttonText: 'Ver horario', startDate: null, endDate: null, isActive: true },
     ],
   },
 ];
@@ -288,6 +306,17 @@ async function main() {
           },
         });
       }
+    }
+
+    // Crear promociones
+    if (biz.promotions && biz.promotions.length > 0) {
+      await prisma.promotion.createMany({
+        data: biz.promotions.map((p) => ({
+          businessId: business.id,
+          ...p,
+        })),
+      });
+      console.log(`🎉 ${biz.promotions.length} promociones creadas`);
     }
 
     // Generar AnalyticsEvent de prueba (~100 eventos)

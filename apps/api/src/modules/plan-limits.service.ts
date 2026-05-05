@@ -10,9 +10,9 @@ export class PlanLimitsService {
   constructor(private readonly prisma: PrismaService) {}
 
   private limits = {
-    FREE: { categories: 5, products: 10, modifiers: 2 },
-    STARTER: { categories: 10, products: 50, modifiers: 5 },
-    PRO: { categories: 999, products: 999, modifiers: 999 },
+    FREE: { categories: 5, products: 10, modifiers: 2, promotions: 1 },
+    STARTER: { categories: 10, products: 50, modifiers: 5, promotions: 3 },
+    PRO: { categories: 999, products: 999, modifiers: 999, promotions: 999 },
   };
 
   async checkCategoryLimit(businessId: string) {
@@ -73,6 +73,26 @@ export class PlanLimitsService {
     if (count >= limit) {
       throw new ForbiddenException(
         `Límite de modificadores alcanzado (${limit}). Actualiza tu plan.`,
+      );
+    }
+  }
+
+  async checkPromotionLimit(businessId: string) {
+    const business = await this.prisma.business.findUnique({
+      where: { id: businessId },
+      select: { plan: true },
+    });
+    if (!business) throw new NotFoundException('Negocio no encontrado');
+
+    const count = await this.prisma.promotion.count({
+      where: { businessId },
+    });
+
+    const limit =
+      this.limits[business.plan as keyof typeof this.limits]?.promotions ?? 1;
+    if (count >= limit) {
+      throw new ForbiddenException(
+        `Límite de promociones alcanzado (${limit}). Actualiza tu plan.`,
       );
     }
   }

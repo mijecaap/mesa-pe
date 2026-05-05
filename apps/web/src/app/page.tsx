@@ -6,6 +6,7 @@ import {
   MessageCircle,
   PenTool,
   Wallet,
+  Megaphone,
   Check,
   ArrowRight,
   Star,
@@ -296,6 +297,14 @@ function Features() {
       image: "/images/landing/feature-fees.webp",
       imageAlt: "Dueño de negocio peruano confiado detrás del mostrador de su restaurante",
     },
+    {
+      icon: Megaphone,
+      title: "Promociones y banners",
+      description:
+        "Destaca ofertas especiales con banners visuales en tu carta digital. Atrae más clientes con promociones temporales.",
+      image: "/images/landing/feature-promotions.webp",
+      imageAlt: "Banner de promoción en carta digital de restaurante",
+    },
   ];
 
   return (
@@ -418,6 +427,7 @@ function Pricing() {
       features: [
         "Hasta 10 productos",
         "Hasta 5 categorías",
+        "1 promoción activa",
         "Código QR básico",
         "Pedidos por WhatsApp",
         "Marca de agua Mesa.pe",
@@ -434,6 +444,7 @@ function Pricing() {
       features: [
         "Hasta 50 productos",
         "Hasta 10 categorías",
+        "3 promociones activas",
         "Código QR personalizado",
         "Pedidos por WhatsApp",
         "Sin marca de agua",
@@ -450,6 +461,7 @@ function Pricing() {
       features: [
         "Productos ilimitados",
         "Categorías ilimitadas",
+        "Promociones ilimitadas",
         "Analytics avanzados",
         "Múltiples métodos de pago",
         "Soporte prioritario",

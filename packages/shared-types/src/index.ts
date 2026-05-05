@@ -10,3 +10,4 @@ export * from "./schemas/media.schema.js";
 export * from "./schemas/order-lead.schema.js";
 export * from "./schemas/analytics.schema.js";
 export * from "./schemas/feature-flags.schema.js";
+export * from "./schemas/promotion.schema.js";

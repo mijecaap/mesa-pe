@@ -78,6 +78,10 @@ export interface PublicBusiness {
     title: string;
     description: string | null;
     imageUrl: string | null;
+    ctaUrl: string | null;
+    buttonText: string | null;
+    startDate: string | null;
+    endDate: string | null;
   }[];
 }
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { X, Moon, Clock } from "lucide-react";
 
 interface ClosedOverlayProps {
@@ -12,14 +12,11 @@ const dayNames = ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"];
 const dayNamesFull = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
 
 export function ClosedOverlay({ openingHours, businessName }: ClosedOverlayProps) {
-  const [dismissed, setDismissed] = useState(false);
+  const [dismissed, setDismissed] = useState(() => {
+    if (typeof window === "undefined") return false;
+    return sessionStorage.getItem("mesa-closed-dismissed") === "true";
+  });
   const [showDetails, setShowDetails] = useState(false);
-
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      setDismissed(sessionStorage.getItem("mesa-closed-dismissed") === "true");
-    }
-  }, []);
 
   const handleDismiss = () => {
     setDismissed(true);

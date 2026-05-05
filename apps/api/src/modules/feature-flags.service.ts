@@ -6,6 +6,7 @@ const PLAN_CONFIG = {
     productsLimit: 10,
     categoriesLimit: 5,
     modifiersLimit: 2,
+    promotionsLimit: 1,
     watermark: true,
     advancedAnalytics: false,
   },
@@ -13,6 +14,7 @@ const PLAN_CONFIG = {
     productsLimit: 50,
     categoriesLimit: 10,
     modifiersLimit: 5,
+    promotionsLimit: 3,
     watermark: false,
     advancedAnalytics: false,
   },
@@ -20,6 +22,7 @@ const PLAN_CONFIG = {
     productsLimit: 999,
     categoriesLimit: 999,
     modifiersLimit: 999,
+    promotionsLimit: 999,
     watermark: false,
     advancedAnalytics: true,
   },
@@ -40,25 +43,29 @@ export class FeatureFlagsService {
       PLAN_CONFIG[business.plan as keyof typeof PLAN_CONFIG] ??
       PLAN_CONFIG.FREE;
 
-    const [productCount, categoryCount, modifierCount] = await Promise.all([
-      this.prisma.menuItem.count({ where: { businessId } }),
-      this.prisma.menuCategory.count({ where: { businessId } }),
-      this.prisma.modifierGroup.count({
-        where: {
-          menuItem: { businessId },
-        },
-      }),
-    ]);
+    const [productCount, categoryCount, modifierCount, promotionCount] =
+      await Promise.all([
+        this.prisma.menuItem.count({ where: { businessId } }),
+        this.prisma.menuCategory.count({ where: { businessId } }),
+        this.prisma.modifierGroup.count({
+          where: {
+            menuItem: { businessId },
+          },
+        }),
+        this.prisma.promotion.count({ where: { businessId } }),
+      ]);
 
     return {
       canCreateProduct: productCount < config.productsLimit,
       canCreateCategory: categoryCount < config.categoriesLimit,
       canCreateModifier: modifierCount < config.modifiersLimit,
+      canCreatePromotion: promotionCount < config.promotionsLimit,
       showWatermark: config.watermark,
       showAdvancedAnalytics: config.advancedAnalytics,
       productsRemaining: Math.max(0, config.productsLimit - productCount),
       categoriesRemaining: Math.max(0, config.categoriesLimit - categoryCount),
       modifiersRemaining: Math.max(0, config.modifiersLimit - modifierCount),
+      promotionsRemaining: Math.max(0, config.promotionsLimit - promotionCount),
     };
   }
 
