@@ -25,6 +25,7 @@ import {
 import { useBusinesses } from "@/hooks/use-business";
 import { useFeatureFlags } from "@/hooks/use-feature-flags";
 import { useDashboardStore } from "@/stores/dashboard";
+import { DashboardTour } from "@/components/dashboard/dashboard-tour";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -96,7 +97,7 @@ function BusinessSelectorFooter({
   flags?: { showWatermark: boolean; showAdvancedAnalytics: boolean };
 }) {
   return (
-    <div className="border-t border-sand p-4">
+    <div className="business-selector-footer border-t border-sand p-4">
       <div className="space-y-3">
         <div>
           <p className="mb-1.5 text-[11px] font-semibold uppercase tracking-wider text-warm-gray">
@@ -297,6 +298,8 @@ export default function DashboardLayout({
           {children}
         </main>
       </div>
+
+      <DashboardTour />
     </div>
   );
 }

@@ -283,8 +283,8 @@
 
 - [x] Sistema de promociones (banners, destacados)
 - [x] Plantillas visuales (temas)
-- [ ] Exportar QR en PDF
-- [ ] Mejor onboarding con tooltips
+- [x] Exportar QR en PDF
+- [x] Mejor onboarding con tooltips
 - [ ] Sistema de planes y suscripciones manual
 
 ### Fase 3: Growth
@@ -411,4 +411,16 @@
 - **Frontend — Layout público**: `layout.tsx` limpiado de colores hardcodeados. `public-page-wrapper.tsx` y `public-page-client.tsx` ahora inyectan las variables CSS del tema activo via inline `style`. El tipo `PublicBusiness` incluye `theme`.
 - **Dashboard — Página de Diseño**: Nueva ruta `/dashboard/design` con selector de 4 temas predefinidos (cards con preview visual), sección de colores personalizados (4 color pickers con inputs hex), selector de tipografía (Sans/Serif/Mono), preview en vivo con mockup de la carta, y botón "Guardar cambios" conectado a `useUpdateBusiness`. Usa patrón `DesignEditor` con `key={business.id}` para evitar `setState` en effects.
 - **Dashboard — Sidebar**: Agregado item "Diseño" con icono `Palette` entre "Promociones" y "Código QR".
+- **Landing page**: Nueva feature "Diseño que te representa" agregada a la sección Features (ícono `Palette`, descripción de temas predefinidos y personalización). Tabla de precios actualizada con "Temas visuales" en Free, "Temas visuales personalizados" en Starter y Pro.
+- **Preview fiel**: Nuevo componente `ThemePreview` que replica la estructura real de la carta pública (hero, promo, search, categorías, productos, info, footer) con CSS variables dinámicas. Reemplaza el mockup básico en `/dashboard/design`.
 - **Builds y lint**: Builds pasan en `web` y `api`. Lint sin errores nuevos (solo warnings preexistentes de otras páginas).
+
+### 2026-05-05 (Post-MVP — Exportar QR en PDF + Tour Interactivo)
+- **Dependencias**: Instaladas `jspdf`, `html2canvas` y `react-joyride` en `apps/web`.
+- **Export QR en PDF**: Nuevo helper `lib/pdf-export.ts` que genera un PDF tipo "Colócalo en tu mesa" (A4) con diseño profesional: nombre del negocio, QR grande centrado, logo overlay, instrucciones para el cliente, hint de WhatsApp y footer de mesa.pe. Usa `html2canvas` para capturar un layout off-screen y `jspdf` para generar el PDF.
+- **QrGenerator**: Agregado botón "PDF" junto a PNG/SVG. El contenedor del QR ahora tiene `data-qr-slug` para que el PDF helper capture el QR existente del DOM.
+- **Tour interactivo del dashboard**: Nuevo componente `components/dashboard/dashboard-tour.tsx` usando `react-joyride` (cargado vía `next/dynamic` con `ssr: false`). Tour de 7 pasos guiados: Mi Negocio → Productos → Diseño → Código QR → Analytics → Selector de negocio → ¡Empieza a vender!. Estilos custom con paleta Mesa.pe (terracotta, cream, coffee).
+- **Persistencia del tour**: Nuevo hook `hooks/use-dashboard-tour.ts` con `useSyncExternalStore` (React 19 compliant, evita `setState` en effects). Guarda `hasSeenTour` y `lastStepIndex` en `localStorage` bajo la key `mesa-dashboard-tour`.
+- **Reiniciar tour**: Botón en Configuración → General para limpiar el estado del tour y volver a verlo.
+- **TODO.md**: Marcadas como completadas las tareas "Exportar QR en PDF" y "Mejor onboarding con tooltips".
+- **Builds y lint**: Builds pasan en `web` y `api`. Lint sin errores nuevos.

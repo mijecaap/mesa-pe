@@ -2,9 +2,10 @@
 
 import { useRef, useCallback, useState } from "react";
 import { QRCodeSVG, QRCodeCanvas } from "qrcode.react";
-import { Download, Copy, Check, Link2 } from "lucide-react";
+import { Download, Copy, Check, Link2, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import { generateQrPdf } from "@/lib/pdf-export";
 
 interface QrGeneratorProps {
   slug: string;
@@ -29,6 +30,24 @@ export function QrGenerator({ slug, logoUrl, businessName }: QrGeneratorProps) {
     link.click();
     toast.success("QR descargado en PNG");
   }, [slug]);
+
+  const downloadPdf = useCallback(async () => {
+    const canvas = canvasRef.current;
+    if (!canvas) {
+      toast.error("QR no disponible para generar PDF");
+      return;
+    }
+
+    try {
+      toast.info("Generando PDF, espera un momento...");
+      const qrDataUrl = canvas.toDataURL("image/png");
+      await generateQrPdf({ slug, businessName, logoUrl, qrDataUrl });
+      toast.success("PDF descargado correctamente");
+    } catch (err) {
+      console.error("[QR PDF] Error generando PDF:", err);
+      toast.error("Error al generar el PDF. Intenta de nuevo.");
+    }
+  }, [slug, businessName, logoUrl]);
 
   const downloadSvg = useCallback(() => {
     const svg = svgRef.current;
@@ -73,7 +92,10 @@ export function QrGenerator({ slug, logoUrl, businessName }: QrGeneratorProps) {
         </div>
 
         {/* Visible SVG QR */}
-        <div className="relative rounded-xl border border-sand bg-white p-5 shadow-sm">
+        <div
+          data-qr-slug={slug}
+          className="relative rounded-xl border border-sand bg-white p-5 shadow-sm"
+        >
           <QRCodeSVG
             value={publicUrl}
             size={qrSize}
@@ -113,7 +135,7 @@ export function QrGenerator({ slug, logoUrl, businessName }: QrGeneratorProps) {
             </Button>
           </div>
 
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-3 gap-3">
             <Button
               variant="outline"
               onClick={downloadPng}
@@ -129,6 +151,14 @@ export function QrGenerator({ slug, logoUrl, businessName }: QrGeneratorProps) {
             >
               <Download className="mr-2 h-4 w-4" />
               SVG
+            </Button>
+            <Button
+              variant="outline"
+              onClick={downloadPdf}
+              className="w-full rounded-xl border-sand hover:bg-sand/40"
+            >
+              <FileText className="mr-2 h-4 w-4" />
+              PDF
             </Button>
           </div>
         </div>

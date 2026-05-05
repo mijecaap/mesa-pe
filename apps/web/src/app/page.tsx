@@ -7,6 +7,7 @@ import {
   PenTool,
   Wallet,
   Megaphone,
+  Palette,
   Check,
   ArrowRight,
   Star,
@@ -290,6 +291,14 @@ function Features() {
       imageAlt: "Dueña de negocio actualizando su menú en una tablet",
     },
     {
+      icon: Palette,
+      title: "Diseño que te representa",
+      description:
+        "Elige entre 4 paletas de colores predefinidas o personaliza los tuyos propios. Tu carta digital refleja la identidad de tu marca.",
+      image: "/images/landing/feature-themes.webp",
+      imageAlt: "Vista previa de temas de colores para carta digital",
+    },
+    {
       icon: Wallet,
       title: "Sin comisiones",
       description:
@@ -428,6 +437,7 @@ function Pricing() {
         "Hasta 10 productos",
         "Hasta 5 categorías",
         "1 promoción activa",
+        "Temas visuales",
         "Código QR básico",
         "Pedidos por WhatsApp",
         "Marca de agua Mesa.pe",
@@ -445,6 +455,7 @@ function Pricing() {
         "Hasta 50 productos",
         "Hasta 10 categorías",
         "3 promociones activas",
+        "Temas visuales personalizados",
         "Código QR personalizado",
         "Pedidos por WhatsApp",
         "Sin marca de agua",
@@ -462,6 +473,7 @@ function Pricing() {
         "Productos ilimitados",
         "Categorías ilimitadas",
         "Promociones ilimitadas",
+        "Temas visuales personalizados",
         "Analytics avanzados",
         "Múltiples métodos de pago",
         "Soporte prioritario",

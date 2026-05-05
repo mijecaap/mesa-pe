@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { toast } from "sonner";
-import { Plus, Trash2, Users, Settings, CreditCard, Truck, Building2, ArrowRight } from "lucide-react";
+import { Plus, Trash2, Users, Settings, CreditCard, Truck, Building2, ArrowRight, RotateCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -22,6 +22,34 @@ import {
 } from "@/hooks/use-delivery-zones";
 import { useOrganization, OrganizationSwitcher } from "@clerk/nextjs";
 import Link from "next/link";
+import { useDashboardTour } from "@/hooks/use-dashboard-tour";
+
+function RestartTourButton() {
+  const { restartTour } = useDashboardTour();
+
+  return (
+    <div className="flex items-center justify-between rounded-xl border border-sand bg-cream/40 p-4">
+      <div>
+        <Label className="text-coffee">Tour del dashboard</Label>
+        <p className="text-sm text-warm-gray">
+          Vuelve a ver el tour guiado por las funciones principales.
+        </p>
+      </div>
+      <Button
+        variant="outline"
+        size="sm"
+        onClick={() => {
+          restartTour();
+          toast.success("Tour reiniciado. Recarga la página para verlo.");
+        }}
+        className="rounded-xl border-sand hover:bg-sand/40"
+      >
+        <RotateCcw className="mr-2 h-4 w-4" />
+        Reiniciar tour
+      </Button>
+    </div>
+  );
+}
 
 export default function SettingsPage() {
   const { activeBusinessId } = useDashboardStore();
@@ -215,6 +243,8 @@ export default function SettingsPage() {
                   onCheckedChange={(checked) => handleUpdateBusiness("isPublished", checked)}
                 />
               </div>
+
+              <RestartTourButton />
             </div>
           </div>
         </TabsContent>
