@@ -12,3 +12,5 @@ export * from "./schemas/order-lead.schema.js";
 export * from "./schemas/analytics.schema.js";
 export * from "./schemas/feature-flags.schema.js";
 export * from "./schemas/promotion.schema.js";
+export * from "./schemas/subscription.schema.js";
+export * from "./schemas/upgrade-request.schema.js";

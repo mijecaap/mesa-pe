@@ -285,7 +285,7 @@
 - [x] Plantillas visuales (temas)
 - [x] Exportar QR en PDF
 - [x] Mejor onboarding con tooltips
-- [ ] Sistema de planes y suscripciones manual
+- [x] Sistema de planes y suscripciones manual
 
 ### Fase 3: Growth
 
@@ -424,3 +424,35 @@
 - **Reiniciar tour**: Botón en Configuración → General para limpiar el estado del tour y volver a verlo.
 - **TODO.md**: Marcadas como completadas las tareas "Exportar QR en PDF" y "Mejor onboarding con tooltips".
 - **Builds y lint**: Builds pasan en `web` y `api`. Lint sin errores nuevos.
+
+### 2026-05-05 (Post-MVP — Sistema de Planes y Suscripciones Manual)
+- **Schema Prisma**: Nuevos modelos `Subscription` (plan, status, fechas, notas, createdBy) y `UpgradeRequest` (requestedPlan, paymentMethod, receiptUrl, status). Relaciones 1:N en `Business`. Sincronizado en Neon PostgreSQL con `prisma db push`.
+- **Backend — Guards**: Nuevo `SuperAdminGuard` protegido por `ADMIN_CLERK_IDS` en env vars (`user_3DK7LgRXbPCy6R7ZPLhN5DIRrwV`).
+- **Backend — SubscriptionModule**: `SubscriptionService` con `createSubscription` (cancela sub activa previa, sincroniza `business.plan`), `getActiveSubscription`, `checkAndExpire` (lazy expiry: si `endsAt < now()`, marca EXPIRED y downgrades a FREE), `getDaysRemaining`, `findByBusiness`, `update`. Controller bajo `/businesses/:businessId/subscription` con `TenantGuard`.
+- **Backend — UpgradeRequestModule**: `UpgradeRequestService` con `create`, `findByBusiness`, `findPending`, `approve` (crea Subscription automáticamente por 30 días), `reject`. Controller bajo `/businesses/:businessId/upgrade-requests` con `TenantGuard`.
+- **Backend — AdminModule**: `AdminController` (`/admin`, `SuperAdminGuard`) con endpoints: `GET /admin/me`, `GET /admin/businesses` (paginado, filtros por plan/q), `GET /admin/businesses/:id` (con historial de subs y requests), `POST /admin/businesses/:id/subscription`, `GET /admin/upgrade-requests`, `POST /admin/upgrade-requests/:id/approve`, `POST /admin/upgrade-requests/:id/reject`.
+- **Backend — Lazy expiry**: `FeatureFlagsService.getFlags()` ahora llama `subscriptionService.checkAndExpire(businessId)` antes de calcular límites. `BusinessModule` importa `SubscriptionModule` para inyección.
+- **Shared types**: Nuevos `subscription.schema.ts` y `upgrade-request.schema.ts` con Zod schemas e inferred types. Nuevos enums `SubscriptionStatus`, `UpgradeRequestStatus`, `UpgradeRequestPaymentMethod`. Exportados desde `@mesa/shared-types`.
+- **Frontend — Hooks**: `useSubscription`, `useDaysRemaining`, `useSubscriptionHistory`, `useCreateSubscription`, `useUpgradeRequests`, `useCreateUpgradeRequest`, `useAdminMe`, `useAdminBusinesses`, `useAdminUpgradeRequests`, `useApproveUpgradeRequest`, `useRejectUpgradeRequest`, `useAdminCreateSubscription`.
+- **Frontend — /dashboard/plan**: Página de gestión de plan para el dueño. Muestra plan actual, badge de expiración si <= 7 días, barras de progreso de uso (productos/categorías/promociones), comparativa de 3 planes (Free/Starter/Pro), modal de solicitud de upgrade con selector de plan, método de pago (Yape/Plin/Transferencia) y subida de comprobante a R2 vía `ImageUpload`.
+- **Frontend — /dashboard/admin**: Panel de super-admin dentro del layout de dashboard. Tabs "Negocios" (tabla paginada con buscador, filtros, modal de gestión de suscripción) y "Solicitudes" (tabla de upgrade requests pendientes con acciones Aprobar/Rechazar y preview de comprobante).
+- **Frontend — Integraciones**: Badge de plan en sidebar ahora es clickeable a `/dashboard/plan`. Link "Upgrade →" redirige internamente. Item "Admin" con icono `Shield` aparece condicionalmente en sidebar si `useAdminMe` devuelve `isAdmin`. Banner amarillo de expiración en dashboard home (`ExpiryBanner`) cuando quedan <= 7 días.
+- **Docs**: Actualizados `04-modelo-datos.md`, `08-decisiones-tecnicas.md` y `TODO.md`.
+- **Trial automático 30 días**: Agregado campo `isTrial` a `Subscription`. `BusinessService.create()` ahora crea automáticamente una suscripción Starter de 30 días (`isTrial: true`) al crear un negocio. El usuario tiene todas las funciones de Starter durante el trial. Al expirar, lazy expiry downgradea a FREE automáticamente. Frontend muestra badge "Prueba gratis" en `/dashboard/plan`, sidebar y comparativa de planes. Botón "Mantener plan" visible durante el trial para incentivar upgrade.
+- **Layout dual Admin/Usuario**: Refactor completo de `DashboardLayout`. Si `useAdminMe` confirma que el usuario es super-admin, se renderiza `AdminLayout` (header simplificado sin `OrganizationSwitcher`, sidebar exclusivo con `adminNavItems` extensible, sin `BusinessSelectorFooter`, sin `DashboardTour`, redirección automática a `/dashboard/admin` si intenta acceder a rutas de usuario). Si no es admin, se renderiza `UserLayout` (comportamiento exacto anterior). Esto aísla completamente la experiencia de admin y deja el sistema listo para nuevas vistas de super-admin sin afectar a usuarios normales.
+- **Fixes de seguridad y estabilidad del admin layout**:
+  - Layout root ahora usa `isFetched` de `useAdminMe` para mostrar un loader fullscreen hasta que la verificación de admin se complete (éxito o error 403). Esto evita que se renderice `UserLayout` (y sus efectos de redirección a onboarding) antes de saber si el usuario es admin.
+  - Hooks `useAdminBusinesses` y `useAdminUpgradeRequests` ahora aceptan parámetro `enabled`. La página `/dashboard/admin` pasa `enabled: isAdmin` para evitar requests 403 en loop cuando un usuario no-admin accede a la ruta.
+- **Verificación de admin server-side (refactor final) — Patrón Clerk Middleware + JWT Claims**:
+  - Eliminado `useAdminMe` del layout root de `/dashboard`. Los usuarios normales nunca llaman a `/admin/me`.
+  - Implementado **Next.js Middleware** (`src/proxy.ts`) con `clerkMiddleware` que corre en Edge Runtime **antes** de que cualquier página se renderice.
+  - El middleware lee `sessionClaims.role` del JWT de Clerk (método principal, usando `publicMetadata` configurada en el dashboard de Clerk). Como safety net, también verifica `CLERK_ADMIN_IDS` (env var server-side).
+  - Lógica del middleware:
+    - Rutas públicas (`/`, `/:slug`, `/sign-in`, etc.) → sin auth.
+    - `/dashboard/admin/*` + no autenticado → `/sign-in`.
+    - `/dashboard/admin/*` + autenticado pero no admin → `/dashboard`.
+    - `/dashboard/*` (cualquier ruta de dashboard) + admin → redirige a `/dashboard/admin`.
+    - Todas las demás rutas protegidas → `auth.protect()`.
+  - `/dashboard/layout.tsx` → siempre renderiza `UserLayout` (9 items de navegación, selector de negocio, tour). Sin lógica de admin.
+  - `/dashboard/admin/layout.tsx` → Server Component limpio. El middleware ya garantizó admin; solo renderiza `AdminLayout` extraído a `components/dashboard/admin-layout.tsx`.
+  - Extensible: cualquier nueva ruta de admin bajo `/dashboard/admin/*` hereda automáticamente la verificación del middleware sin tocar código.

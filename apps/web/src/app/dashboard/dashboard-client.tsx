@@ -14,11 +14,13 @@ import {
   BarChart3,
   ExternalLink,
   Sparkles,
+  Clock,
 } from "lucide-react";
 import Link from "next/link";
 import { useBusinesses } from "@/hooks/use-business";
 import { useDashboardStore } from "@/stores/dashboard";
 import { useAnalyticsSummary } from "@/hooks/use-analytics";
+import { useDaysRemaining } from "@/hooks/use-subscription";
 import { LaunchChecklist } from "@/components/dashboard/launch-checklist";
 import { DashboardStatsSkeleton } from "@/components/dashboard/skeletons/dashboard-stats-skeleton";
 import { Button } from "@/components/ui/button";
@@ -86,6 +88,7 @@ export function DashboardClient() {
 
   return (
     <div className="space-y-8">
+      <ExpiryBanner businessId={activeBusiness?.id} />
       <LaunchChecklist business={activeBusiness} />
 
       <StatsGrid businessId={activeBusiness?.id} />
@@ -96,6 +99,37 @@ export function DashboardClient() {
           <TipCard />
         </>
       )}
+    </div>
+  );
+}
+
+function ExpiryBanner({ businessId }: { businessId?: string }) {
+  const { data } = useDaysRemaining(businessId);
+  const days = data?.days;
+
+  if (days === null || days === undefined || days > 7) return null;
+
+  return (
+    <div className="rounded-2xl border border-amber-200 bg-amber-50/60 p-4 shadow-sm">
+      <div className="flex items-start gap-3">
+        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-amber-100">
+          <Clock className="h-[18px] w-[18px] text-amber-700" />
+        </div>
+        <div className="flex-1">
+          <p className="text-sm font-semibold text-amber-900">
+            Tu plan expira en {days} día{days !== 1 ? "s" : ""}
+          </p>
+          <p className="mt-0.5 text-sm leading-relaxed text-amber-800">
+            Renueva tu suscripción para no perder funciones premium.{" "}
+            <Link
+              href="/dashboard/plan"
+              className="font-medium text-terracotta hover:underline"
+            >
+              Gestionar plan →
+            </Link>
+          </p>
+        </div>
+      </div>
     </div>
   );
 }

@@ -1,5 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../database/prisma.service';
+import { SubscriptionService } from './subscription/subscription.service';
 
 const PLAN_CONFIG = {
   FREE: {
@@ -30,9 +31,15 @@ const PLAN_CONFIG = {
 
 @Injectable()
 export class FeatureFlagsService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly subscriptionService: SubscriptionService,
+  ) {}
 
   async getFlags(businessId: string) {
+    // Lazy expiry check
+    await this.subscriptionService.checkAndExpire(businessId);
+
     const business = await this.prisma.business.findUnique({
       where: { id: businessId },
       select: { plan: true },

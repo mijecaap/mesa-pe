@@ -47,13 +47,16 @@
 
 ## 4. ¿Pagos desde el día 1?
 
-**Decisión:** No.
+**Decisión:** No. Sistema de suscripciones manual.
 
 **Estrategia:**
 
-- Para los primeros 10 clientes: cobrar manualmente por Yape/Plin/transferencia.
-- Registrar manualmente el plan activo en base de datos.
-- Diseñar la entidad `Subscription` desde el inicio para facilitar integración futura.
+- Para los primeros clientes: cobrar manualmente por Yape/Plin/transferencia.
+- El dueño del negocio solicita upgrade desde `/dashboard/plan` y sube comprobante opcional a R2.
+- El equipo Mesa.pe gestiona solicitudes desde `/dashboard/admin`: aprueba/rechaza con un click.
+- Al aprobar, se crea automáticamente un `Subscription` con fecha de inicio y fin.
+- Expiración lazy: cada vez que se consultan feature flags, se verifica si la suscripción activa expiró y se hace downgrade automático a FREE.
+- `business.plan` sigue siendo la fuente de verdad del plan activo; `Subscription` es el historial y control de fechas.
 - Integrar Mercado Pago o Culqi cuando exista validación real y flujo de ingresos.
 
 ---

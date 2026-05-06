@@ -8,10 +8,14 @@ export const metadata: Metadata = {
 };
 
 export default async function DashboardPage() {
-  const { userId } = await auth();
+  const { userId, sessionClaims } = await auth();
 
   if (!userId) {
     redirect("/sign-in");
+  }
+
+  if (sessionClaims?.role === "admin") {
+    redirect("/dashboard/admin");
   }
 
   return (

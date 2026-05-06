@@ -4,9 +4,10 @@ import { BusinessController } from './business.controller';
 import { PublicBusinessController } from './public-business.controller';
 import { DatabaseModule } from '../../database/database.module';
 import { FeatureFlagsService } from '../feature-flags.service';
+import { SubscriptionModule } from '../subscription/subscription.module';
 
 @Module({
-  imports: [DatabaseModule],
+  imports: [DatabaseModule, SubscriptionModule],
   controllers: [BusinessController, PublicBusinessController],
   providers: [BusinessService, FeatureFlagsService],
   exports: [BusinessService],

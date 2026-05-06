@@ -11,6 +11,7 @@ import {
   UpdateBusinessDto,
 } from './dto/create-business.dto';
 import { FeatureFlagsService } from '../feature-flags.service';
+import { SubscriptionService } from '../subscription/subscription.service';
 
 function getLimaTime(): Date {
   return new Date(
@@ -53,6 +54,7 @@ export class BusinessService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly featureFlags: FeatureFlagsService,
+    private readonly subscriptionService: SubscriptionService,
   ) {}
 
   private async ensureUser(clerkId: string) {
@@ -119,7 +121,7 @@ export class BusinessService {
       fontFamily: 'sans',
     };
 
-    return this.prisma.business.create({
+    const business = await this.prisma.business.create({
       data: {
         ...dto,
         theme: (dto.theme ?? defaultTheme) as unknown as Prisma.InputJsonValue,
@@ -127,6 +129,18 @@ export class BusinessService {
         organizationId: orgId || null,
       },
     });
+
+    // Crear trial automático de 30 días con plan Starter
+    const endsAt = new Date();
+    endsAt.setDate(endsAt.getDate() + 30);
+    await this.subscriptionService.create(business.id, {
+      plan: 'STARTER',
+      endsAt,
+      notes: 'Prueba gratuita de 30 días al crear el negocio',
+      isTrial: true,
+    });
+
+    return business;
   }
 
   async findOne(id: string) {

@@ -16,6 +16,9 @@ import { DeliveryZonesModule } from './modules/delivery-zones/delivery-zones.mod
 import { OrderLeadsModule } from './modules/order-leads/order-leads.module';
 import { AnalyticsModule } from './modules/analytics/analytics.module';
 import { PromotionsModule } from './modules/promotions/promotions.module';
+import { SubscriptionModule } from './modules/subscription/subscription.module';
+import { UpgradeRequestModule } from './modules/upgrade-request/upgrade-request.module';
+import { AdminModule } from './modules/admin/admin.module';
 
 @Module({
   imports: [
@@ -34,6 +37,9 @@ import { PromotionsModule } from './modules/promotions/promotions.module';
     OrderLeadsModule,
     AnalyticsModule,
     PromotionsModule,
+    SubscriptionModule,
+    UpgradeRequestModule,
+    AdminModule,
   ],
   controllers: [AppController],
   providers: [AppService],

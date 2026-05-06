@@ -5,6 +5,7 @@ import {
   OrganizationSwitcher,
   UserButton,
   useOrganization,
+  useUser,
 } from "@clerk/nextjs";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
@@ -35,7 +36,7 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 
-const navItems = [
+const userNavItems = [
   { href: "/dashboard/business", label: "Mi Negocio", icon: Store },
   { href: "/dashboard/hours", label: "Horarios", icon: Clock },
   { href: "/dashboard/categories", label: "Categorías", icon: Tags },
@@ -48,15 +49,17 @@ const navItems = [
 ];
 
 function NavItems({
+  items,
   pathname,
   onNavigate,
 }: {
+  items: { href: string; label: string; icon: React.ElementType }[];
   pathname: string;
   onNavigate?: () => void;
 }) {
   return (
     <nav className="flex flex-col gap-1 p-3">
-      {navItems.map((item) => {
+      {items.map((item) => {
         const isActive = pathname === item.href;
         return (
           <Link
@@ -120,20 +123,21 @@ function BusinessSelectorFooter({
         </div>
         {flags && (
           <div className="flex items-center justify-between">
-            <Badge
-              variant="outline"
-              className="border-sand text-[10px] uppercase tracking-wider text-warm-gray"
-            >
-              {flags.showWatermark
-                ? "Free"
-                : flags.showAdvancedAnalytics
-                  ? "Pro"
-                  : "Starter"}
-            </Badge>
-            {flags.showWatermark && (
+            <Link href="/dashboard/plan">
+              <Badge
+                variant="outline"
+                className="border-sand text-[10px] uppercase tracking-wider text-warm-gray cursor-pointer hover:border-terracotta/40 hover:text-terracotta transition-colors"
+              >
+                {flags.showWatermark
+                  ? "Free"
+                  : flags.showAdvancedAnalytics
+                    ? "Pro"
+                    : "Starter"}
+              </Badge>
+            </Link>
+            {!flags.showAdvancedAnalytics && (
               <Link
-                href="/#precios"
-                target="_blank"
+                href="/dashboard/plan"
                 className="text-[11px] font-semibold text-terracotta transition-colors hover:text-terracotta-deep hover:underline"
               >
                 Upgrade →
@@ -151,8 +155,15 @@ export default function DashboardLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const { organization } = useOrganization();
   const pathname = usePathname();
+
+  // Admin routes have their own layout; skip the user dashboard shell
+  if (pathname.startsWith("/dashboard/admin")) {
+    return <>{children}</>;
+  }
+
+  const { organization } = useOrganization();
+  const { user } = useUser();
   const router = useRouter();
   const { data: businesses, isLoading: businessesLoading } = useBusinesses(
     organization?.id,
@@ -172,11 +183,12 @@ export default function DashboardLayout({
       !businessesLoading &&
       businesses &&
       businesses.length === 0 &&
-      !pathname.startsWith("/dashboard/onboarding")
+      !pathname.startsWith("/dashboard/onboarding") &&
+      user?.publicMetadata?.role !== "admin"
     ) {
       router.push("/dashboard/onboarding");
     }
-  }, [businessesLoading, businesses, pathname, router]);
+  }, [businessesLoading, businesses, pathname, router, user]);
 
   const hasBusinesses = businesses && businesses.length > 0;
 
@@ -221,6 +233,7 @@ export default function DashboardLayout({
                   </div>
                   <div className="flex-1 overflow-auto py-2">
                     <NavItems
+                      items={userNavItems}
                       pathname={pathname}
                       onNavigate={() => setMobileNavOpen(false)}
                     />
@@ -277,7 +290,7 @@ export default function DashboardLayout({
         {/* Desktop Sidebar */}
         <aside className="sticky top-14 hidden h-[calc(100vh-3.5rem)] w-64 flex-col border-r border-sand bg-white md:flex">
           <div className="flex-1 overflow-y-auto py-2">
-            <NavItems pathname={pathname} />
+            <NavItems items={userNavItems} pathname={pathname} />
           </div>
 
           {hasBusinesses && (
@@ -291,10 +304,7 @@ export default function DashboardLayout({
         </aside>
 
         {/* Main content */}
-        <main
-          id="main-content"
-          className="flex-1 p-4 md:p-6 lg:p-8"
-        >
+        <main id="main-content" className="flex-1 p-4 md:p-6 lg:p-8">
           {children}
         </main>
       </div>

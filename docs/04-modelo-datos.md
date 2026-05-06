@@ -16,7 +16,9 @@ User (via Clerk)
             ├── Promotion[]
             ├── MediaAsset[]
             ├── AnalyticsEvent[]
-            └── OrderLead[]
+            ├── OrderLead[]
+            ├── Subscription[]
+            └── UpgradeRequest[]
 ```
 
 ## 2. Schema Prisma Completo
@@ -193,8 +195,8 @@ model OrderLead {
 model AnalyticsEvent {
   id         String   @id @default(cuid())
   businessId String
-  eventName  String   // page_view, product_view, add_to_cart, whatsapp_click, order_started
-  entityType String?  // product, category, promotion
+  eventName  String
+  entityType String?
   entityId   String?
   metadata   Json?
   sessionId  String?
@@ -205,6 +207,40 @@ model AnalyticsEvent {
   business   Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
 
   @@index([businessId, eventName, createdAt])
+}
+
+model Subscription {
+  id          String   @id @default(cuid())
+  businessId  String
+  plan        String
+  status      String   @default("ACTIVE")
+  isTrial     Boolean  @default(false)
+  startsAt    DateTime @default(now())
+  endsAt      DateTime
+  notes       String?
+  createdBy   String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  business    Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+
+  @@index([businessId, status])
+  @@index([endsAt, status])
+}
+
+model UpgradeRequest {
+  id            String   @id @default(cuid())
+  businessId    String
+  requestedPlan String
+  paymentMethod String
+  status        String   @default("PENDING")
+  receiptUrl    String?
+  notes         String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  business      Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+
+  @@index([businessId, status])
+  @@index([status, createdAt])
 }
 ```
 

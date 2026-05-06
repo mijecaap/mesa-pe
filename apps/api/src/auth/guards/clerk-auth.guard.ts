@@ -12,6 +12,7 @@ interface AuthRequest extends Request {
     userId: string;
     orgId?: string;
     orgRole?: string;
+    role?: string;
   };
 }
 
@@ -36,13 +37,16 @@ export class ClerkAuthGuard implements CanActivate {
       const claims = await verifyToken(token, {
         secretKey: process.env.CLERK_SECRET_KEY,
       });
+      console.log('[CLERK AUTH] Token verified. Claims:', JSON.stringify(claims));
       request.user = {
         userId: claims.sub,
         orgId: claims.org_id,
         orgRole: claims.org_role,
+        role: (claims as any).role,
       };
       return true;
-    } catch {
+    } catch (err: any) {
+      console.error('[CLERK AUTH] verifyToken failed:', err?.message || err);
       throw new UnauthorizedException('Invalid or expired token');
     }
   }

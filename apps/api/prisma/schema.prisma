@@ -61,6 +61,8 @@ model Business {
   analytics       AnalyticsEvent[]
   orderLeads      OrderLead[]
   openingHours    OpeningHour[]
+  subscriptions   Subscription[]
+  upgradeRequests UpgradeRequest[]
 
   @@index([organizationId])
 }
@@ -210,4 +212,38 @@ model AnalyticsEvent {
   business   Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
 
   @@index([businessId, eventName, createdAt])
+}
+
+model Subscription {
+  id          String   @id @default(cuid())
+  businessId  String
+  plan        String
+  status      String   @default("ACTIVE")
+  isTrial     Boolean  @default(false)
+  startsAt    DateTime @default(now())
+  endsAt      DateTime
+  notes       String?
+  createdBy   String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  business    Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+
+  @@index([businessId, status])
+  @@index([endsAt, status])
+}
+
+model UpgradeRequest {
+  id            String   @id @default(cuid())
+  businessId    String
+  requestedPlan String
+  paymentMethod String
+  status        String   @default("PENDING")
+  receiptUrl    String?
+  notes         String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  business      Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+
+  @@index([businessId, status])
+  @@index([status, createdAt])
 }

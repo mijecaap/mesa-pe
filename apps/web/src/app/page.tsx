@@ -35,9 +35,9 @@ export const metadata = {
 };
 
 export default async function LandingPage() {
-  const { userId } = await auth();
+  const { userId, sessionClaims } = await auth();
   if (userId) {
-    redirect("/dashboard");
+    redirect(sessionClaims?.role === "admin" ? "/dashboard/admin" : "/dashboard");
   }
 
   return (

@@ -44,6 +44,34 @@ export const PlanType = {
 
 export type PlanType = (typeof PlanType)[keyof typeof PlanType];
 
+export const SubscriptionStatus = {
+  ACTIVE: "ACTIVE",
+  CANCELLED: "CANCELLED",
+  EXPIRED: "EXPIRED",
+} as const;
+
+export type SubscriptionStatus =
+  (typeof SubscriptionStatus)[keyof typeof SubscriptionStatus];
+
+export const UpgradeRequestStatus = {
+  PENDING: "PENDING",
+  PAID: "PAID",
+  APPROVED: "APPROVED",
+  REJECTED: "REJECTED",
+} as const;
+
+export type UpgradeRequestStatus =
+  (typeof UpgradeRequestStatus)[keyof typeof UpgradeRequestStatus];
+
+export const UpgradeRequestPaymentMethod = {
+  YAPE: "YAPE",
+  PLIN: "PLIN",
+  TRANSFER: "TRANSFER",
+} as const;
+
+export type UpgradeRequestPaymentMethod =
+  (typeof UpgradeRequestPaymentMethod)[keyof typeof UpgradeRequestPaymentMethod];
+
 export const SelectionType = {
   SINGLE: "SINGLE",
   MULTIPLE: "MULTIPLE",

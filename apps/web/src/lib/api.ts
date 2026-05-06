@@ -3,7 +3,7 @@ import { useAuth } from "@clerk/nextjs";
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000";
 
 export function useApiClient() {
-  const { getToken } = useAuth();
+  const { getToken, isLoaded } = useAuth();
 
   async function fetchWithAuth(
     endpoint: string,
@@ -29,5 +29,5 @@ export function useApiClient() {
     return res.json();
   }
 
-  return { fetchWithAuth };
+  return { fetchWithAuth, isReady: isLoaded };
 }
