@@ -1,0 +1,193 @@
+@page {
+  size: A4;
+  margin: 0;
+}
+
+.pdf-page {
+  width: 210mm;
+  height: 297mm;
+  background-color: #fdf8f3;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  padding: 18mm;
+  font-family: "DM Sans", ui-sans-serif, system-ui, sans-serif;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+.accent-line {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 8px;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  width: 100%;
+  max-width: 174mm;
+}
+
+.label-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 28px;
+  border-radius: 999px;
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1;
+  margin-bottom: 18mm;
+}
+
+.business-name {
+  font-family: "Playfair Display", ui-serif, Georgia, serif;
+  font-size: 42px;
+  font-weight: 600;
+  color: #2a211e;
+  line-height: 1.15;
+  margin: 0 0 5mm 0;
+  word-break: break-word;
+}
+
+.subtitle {
+  font-size: 18px;
+  color: #7d6f65;
+  margin: 0 0 13mm 0;
+  font-weight: 400;
+}
+
+.qr-card {
+  background-color: #ffffff;
+  border: 1.5px solid #ede6de;
+  border-radius: 24px;
+  padding: 7mm;
+  margin-bottom: 11mm;
+  break-inside: avoid;
+}
+
+.qr-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logo-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.logo-bg {
+  background-color: #ffffff;
+  border: 2px solid #ffffff;
+  border-radius: 14px;
+  padding: 10px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.logo-img {
+  width: 72px;
+  height: 72px;
+  object-fit: cover;
+  border-radius: 10px;
+  display: block;
+}
+
+.instructions {
+  font-size: 16px;
+  color: #7d6f65;
+  line-height: 1.55;
+  max-width: 160mm;
+  margin: 0 0 9mm 0;
+}
+
+.whatsapp-hint {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background-color: #f5f0eb;
+  padding: 12px 28px;
+  border-radius: 999px;
+  font-size: 15px;
+  font-weight: 500;
+  color: #6b5b4f;
+  margin-bottom: 13mm;
+  break-inside: avoid;
+}
+
+.whatsapp-dot {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background-color: #25d366;
+  flex-shrink: 0;
+}
+
+.divider {
+  width: 100%;
+  max-width: 120mm;
+  height: 1px;
+  background-color: #ede6de;
+  margin-bottom: 10mm;
+}
+
+.footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3mm;
+}
+
+.footer-label {
+  font-size: 14px;
+  color: #7d6f65;
+  margin: 0;
+}
+
+.footer-brand {
+  font-size: 18px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.footer-url {
+  font-size: 12px;
+  color: #a89b8c;
+  margin: 0;
+}
+
+@media print {
+  html,
+  body {
+    background: white;
+    margin: 0;
+    padding: 0;
+  }
+
+  .pdf-page {
+    width: 210mm;
+    height: 297mm;
+    page-break-after: always;
+    page-break-inside: avoid;
+  }
+
+  .qr-card,
+  .whatsapp-hint,
+  .footer {
+    break-inside: avoid;
+  }
+}

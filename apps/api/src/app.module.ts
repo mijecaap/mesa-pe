@@ -19,6 +19,7 @@ import { PromotionsModule } from './modules/promotions/promotions.module';
 import { SubscriptionModule } from './modules/subscription/subscription.module';
 import { UpgradeRequestModule } from './modules/upgrade-request/upgrade-request.module';
 import { AdminModule } from './modules/admin/admin.module';
+import { PdfModule } from './modules/pdf/pdf.module';
 
 @Module({
   imports: [
@@ -40,6 +41,7 @@ import { AdminModule } from './modules/admin/admin.module';
     SubscriptionModule,
     UpgradeRequestModule,
     AdminModule,
+    PdfModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -1,11 +1,11 @@
 "use client";
 
 import { useRef, useCallback, useState } from "react";
+import { useAuth } from "@clerk/nextjs";
 import { QRCodeSVG, QRCodeCanvas } from "qrcode.react";
 import { Download, Copy, Check, Link2, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import { generateQrPdf } from "@/lib/pdf-export";
 
 interface QrGeneratorProps {
   slug: string;
@@ -17,6 +17,7 @@ export function QrGenerator({ slug, logoUrl, businessName }: QrGeneratorProps) {
   const svgRef = useRef<SVGSVGElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [copied, setCopied] = useState(false);
+  const { getToken } = useAuth();
 
   const publicUrl = typeof window !== "undefined" ? `${window.location.origin}/${slug}` : `https://mesa.pe/${slug}`;
 
@@ -32,22 +33,38 @@ export function QrGenerator({ slug, logoUrl, businessName }: QrGeneratorProps) {
   }, [slug]);
 
   const downloadPdf = useCallback(async () => {
-    const canvas = canvasRef.current;
-    if (!canvas) {
-      toast.error("QR no disponible para generar PDF");
-      return;
-    }
-
     try {
       toast.info("Generando PDF, espera un momento...");
-      const qrDataUrl = canvas.toDataURL("image/png");
-      await generateQrPdf({ slug, businessName, logoUrl, qrDataUrl });
+
+      const token = await getToken();
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000";
+
+      const res = await fetch(`${apiUrl}/pdf/qr/${slug}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!res.ok) {
+        throw new Error(`Error ${res.status}`);
+      }
+
+      const blob = await res.blob();
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `${slug}-qr-mesa.pdf`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+
       toast.success("PDF descargado correctamente");
     } catch (err) {
-      console.error("[QR PDF] Error generando PDF:", err);
+      console.error("[QR PDF] Error descargando PDF:", err);
       toast.error("Error al generar el PDF. Intenta de nuevo.");
     }
-  }, [slug, businessName, logoUrl]);
+  }, [slug, getToken]);
 
   const downloadSvg = useCallback(() => {
     const svg = svgRef.current;
